@@ -1,0 +1,32 @@
+{
+  "name": "tarkov",
+  "version": "0.0.1",
+  "description": "A client library for Escape from Tarkov API",
+  "main": "tarkov.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matias-kovero/tarkov.git"
+  },
+  "keywords": [
+    "eft",
+    "api",
+    "sdk",
+    "api",
+    "escapefromtarkov",
+    "tarkov",
+    "bot",
+    "escape-from-tarkov"
+  ],
+  "author": "mkovero",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/matias-kovero/tarkov/issues"
+  },
+  "homepage": "https://github.com/matias-kovero/tarkov#readme"
+}
