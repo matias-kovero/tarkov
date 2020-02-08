@@ -8,7 +8,6 @@ const Item      = require('./lib/item');
 
 /**
 * ## Unofficial Tarkov API
-* https://stackoverflow.com/questions/52315147/json-to-javascript-class
 *
 * @version 0.0.1
 */
