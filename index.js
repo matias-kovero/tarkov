@@ -1,4 +1,4 @@
-require('./globals');
+require('./lib/globals');
 const Auth      = require('./lib/auth');
 const auth      = new Auth();
 const Profile   = require('./lib/profile');
