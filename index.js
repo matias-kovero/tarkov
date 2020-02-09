@@ -4,12 +4,12 @@ const auth      = new Auth();
 const Profile   = require('./lib/profile');
 const Trader    = require('./lib/trader');
 const Item      = require('./lib/item');
+const generate_hwid  = require('./lib/hwid');
 
 
 /**
-* ## Unofficial Tarkov API
-*
-* @version 0.0.1
+* #### Unofficial Tarkov API
+* Functions missing -> Give a PR.
 */
 function Tarkov(client=request, hwid, session) {
   if (!(this instanceof Tarkov)) return new Tarkov(client, hwid, session);
@@ -18,7 +18,10 @@ function Tarkov(client=request, hwid, session) {
   this.hwid = hwid;
   this.session = session;
 }
-
+  /**
+   * Checks if the library is using the right launcher version.
+   * If not it will update the version for this session.
+   */
   Tarkov.prototype.checkLauncherVersion = async function() {
     let msg = "Serious error. Contant creator.";
     let url = `https://${LAUNCHER_ENDPOINT}/launcher/GetLauncherDistrib`;
@@ -36,6 +39,10 @@ function Tarkov(client=request, hwid, session) {
     return msg;
   }
 
+  /**
+   * Checks if the library is using the right game version.
+   * If not it will update the version for this session.
+   */
   Tarkov.prototype.checkGameVersion = async function() {
     let msg = "Serious error. Contact creator";
     let url = `https://${LAUNCHER_ENDPOINT}/launcher/GetPatchList?launcherVersion=${LAUNCHER_VERSION}&branch=live`;
@@ -87,6 +94,7 @@ function Tarkov(client=request, hwid, session) {
 
   /* TODO: Fix res.data */
   /**
+   * Gets users all profiles. Should containt array [scav, pmc]
    * @returns {Promise<[Profile]>} Array of profiles
    */
   Tarkov.prototype.get_profiles = async function() {
@@ -173,15 +181,14 @@ function Tarkov(client=request, hwid, session) {
     }
   }
 
+  /**
+   * Gets all items.
+   */
   Tarkov.prototype.get_items = async function() {
     try {
       let url = `https://${PROD_ENDPOINT}/client/items`;
       let res = await this.post_json(url, {crc : 0});
-      //console.log(Object.values(res.data));
-      //console.log(typeof res.data);
-      //console.log(res.data.shift());
       let items = Object.entries(res.data).map(item => { return new Item(item) });
-      //console.log(items[1322]);
       return items;
       //else throw new Error(res.errmsg);
     } catch (error) {
@@ -198,21 +205,10 @@ function Tarkov(client=request, hwid, session) {
   }*/
 
   /**
-   * Get a list of all in-game items.
-   */
-  /*
-  async get_items() {
-
-  }*/
-
-  /*
-  async get_profiles() {
-    let url = `${PROD_ENDPOINT}/client/game/profile/list`;
-    let res = await this.post_json(url, {});
-  }*/
-  /**
-   * @param page starting page, ex. start searching from page 0.
-   * @param limit limit how many results to show. Ex 15.
+   * @param {Number} page - starting page, ex. start searching from page 0.
+   * @param {Number} limit - limit how many results to show. Ex 15.
+   * @param {Object} filter - Market Filter
+   * @param {Number} filter.sort_type - Sort by: ID = 0, Barter = 2, Mechant Rating = 3, Price = 5, Expiry = 6
    */
   Tarkov.prototype.search_market = async function(page, limit, filter) {
     try {
@@ -248,6 +244,7 @@ function Tarkov(client=request, hwid, session) {
       return new Error(error.message);
     }
   }
+
 
   Tarkov.prototype.buy_item = async function(offer_id, quantity, barter_item) {
     try {
@@ -305,12 +302,104 @@ function Tarkov(client=request, hwid, session) {
     }
   }
 
+  /**
+   * Put item on flea market.
+   * @param {Array} items - Array of items ids from your inventory you want to sell. (Need to be same items)
+   * @param {Object} requirement - Object with sell info {_tlp: items _tlp, price: sellprice}
+   * @param {String} requirement._tpl - Items schema id. Also known _tpl. Ex. Rouble_id
+   * @param {String} requirement.price - On what price you want to sell.
+   * @param {Boolean} sell_all - Sell all in one piece. Default false
+   */
+  Tarkov.prototype.offer_item = async function(items, requirement, sell_all) {
+    try {
+      if(!items || !requirement) throw new Error('Invalid params');
+      let url = `https://${PROD_ENDPOINT}/client/game/profile/items/moving`;
+      
+      let body = {
+        data: [{
+          Action: "RagFairAddOffer",
+          sell_in_one_piece: sell_all || false,
+          items: items, // Array of item_ids
+          requirements:[{
+            _tpl: requirement._tpl,
+            count: requirement.price,
+            level: 0,
+            side: 0,
+            only_functional: false,
+          }],
+        tm: 2,
+        }],
+      };
+
+      let res = await this.post_json(url, body);
+      if(res.data.badRequest[0]) return res.data.badRequest[0];
+      else if(res.err == 0 && res.data.items) return res.data.items;
+      else return res;
+    } catch(error) {
+      console.log(error.message);
+      return new Error(error.message);
+    }
+  }
+
+  /* TODO: Handle errors correctly, as there will be bunch of invalid moves. */
+  /**
+   * Will merge 2 items together.  
+   * ### Caution!! This functions has no error handling yet!
+   * #### Example usage: 
+   * - merge stack of roubles to another stack of roubles.
+   * - merge stack of bullets to another stack of bullets.
+   * @param from_item_id the item we will move 
+   * @param to_item_id the item id where we merge(stack)
+   */
+  Tarkov.prototype.stack_item = async function(from_item_id, to_item_id) {
+    let url = `https://${PROD_ENDPOINT}/client/game/profile/items/moving`;
+    let body = {
+      data: [{
+        Action: "Merge",
+        item: from_item_id,
+        with: to_item_id
+      }],
+      tm: 2,
+    };
+    let res = await this.post_json(url, body);
+    if(res.err != 0) console.log(res);
+    //console.log(res);
+  }
+
+  /**
+   * Move item in inventory.
+   * @param {String} item_id - the item id what we want to move.
+   * @param {Object} destination - info where to move. {id, container, location:{x,y,r} }
+   * @param {String} destination.id - item id where we move
+   * @param {String} destination.container - 'main' if its container, else 'hideout' = stash
+   * @param {Object} destination.location - {x, y, r} x & y locations, topleft is 0,0. r = 0 or 1.
+   */
+  Tarkov.prototype.move_item = async function(item_id, destination) {
+    if(!item_id || !destination.id) return new Error('Invalid params');
+    let url = `https://${PROD_ENDPOINT}/client/game/profile/items/moving`;
+    let body = {
+      data: [{
+        Action: "Move",
+        item: item_id,
+        to:{
+          id: destination.id,
+          container: destination.container || 'main', // main = container, hideout = stash 
+          location: destination.location || {x: 0, y: 0, r: 0}, // try to put to topleft if empty
+        },
+      }],
+      tm: 2,
+    };
+    let res = await this.post_json(url, body);
+    if(res.err != 0) console.log(res);
+    else if(res.err == 0) return 'Moved';
+    //console.log(res);
+  }
 
   /**
    * Send JSON to EFT Server
    * @param {*} this 
-   * @param {*} url path were the request should be sent
-   * @param {*} body data to send
+   * @param {String} url path were the request should be sent
+   * @param {Object} body data to send
    */
   
   Tarkov.prototype.post_json =  async function(url, data) {
@@ -361,4 +450,4 @@ function Tarkov(client=request, hwid, session) {
     }
   }
 
-module.exports = Tarkov;
+module.exports = {Tarkov, generate_hwid};
