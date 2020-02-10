@@ -6,10 +6,11 @@ This library is currently in alpha. Everything may change significantly in futur
 - [x] Flea market
 - [x] Traders
 - [ ] Hideout
-- [x] Inventory management (*move, stack implmented*)
+- [x] Inventory management(_*_)  
 - [ ] Messenger
 - [ ] Quests
 
+_* Move & Stack are implemented_
 ## Install
 ```
 npm i tarkov
@@ -60,5 +61,7 @@ Site_key: 6LexEI4UAAAAAIFtNZALcloZfEgHhB8rEUqC1LwV
 I should emphasize that this library is _unofficial_. EFT does not have a public API, everything in this repo was reversed from the game.
 
 The API is clearly designed for internal use. It contains numerous spelling mistakes, inconsistent conventions, and tons of bad practice JSON. The developers may push breaking changes without prior warning.
+## Want to Contribute?  
+[Read this first!](CONTRIBUTING.md)
 ## License
 [MIT](LICENSE)
