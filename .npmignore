@@ -2,3 +2,4 @@ node_modules
 CONTRIBUTING
 package-lock.json
 docs
+jsdoc.json
