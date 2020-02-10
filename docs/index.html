@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Home - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Exports.Tarkov.html">Tarkov</a><ul class='methods'><li data-type='method'><a href="Exports.Tarkov.html#checkGameVersion">checkGameVersion</a></li><li data-type='method'><a href="Exports.Tarkov.html#checkLauncherVersion">checkLauncherVersion</a></li><li data-type='method'><a href="Exports.Tarkov.html#from_access_token">from_access_token</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_i18n">get_i18n</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_items">get_items</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_profiles">get_profiles</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_trader">get_trader</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_traders">get_traders</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_weather">get_weather</a></li><li data-type='method'><a href="Exports.Tarkov.html#login">login</a></li><li data-type='method'><a href="Exports.Tarkov.html#move_item">move_item</a></li><li data-type='method'><a href="Exports.Tarkov.html#offer_item">offer_item</a></li><li data-type='method'><a href="Exports.Tarkov.html#search_market">search_market</a></li><li data-type='method'><a href="Exports.Tarkov.html#select_profile">select_profile</a></li><li data-type='method'><a href="Exports.Tarkov.html#stack_item">stack_item</a></li></ul></li><li><a href="Profile.html">Profile</a><ul class='methods'><li data-type='method'><a href="Profile.html#getDollars">getDollars</a></li><li data-type='method'><a href="Profile.html#getEuros">getEuros</a></li><li data-type='method'><a href="Profile.html#getItemById">getItemById</a></li><li data-type='method'><a href="Profile.html#getItems">getItems</a></li><li data-type='method'><a href="Profile.html#getRoubles">getRoubles</a></li></ul></li><li><a href="Trader.html">Trader</a></li></ul><h3>Global</h3><ul><li><a href="global.html#generate_hwid">generate_hwid</a></li></ul>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+    <section class="package">
+        <h3> </h3>		
+    </section>
+
+
+
+
+
+
+
+
+
+    
+
+
+
+    <section class="readme usertext">
+        <article><h1>Tarkov · <a href="https://github.com/matias-kovero/tarkov/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/tarkov?color=blue&amp;style=plastic" alt="NPM"></a> <a href="https://www.npmjs.com/package/tarkov"><img src="https://img.shields.io/npm/v/tarkov?color=blue&amp;style=plastic" alt="npm"></a> <a href="https://github.com/matias-kovero/tarkov/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=plastic" alt="PRs Welcome"></a></h1>
+<p>A js library for the <a href="https://escapefromtarkov.com">Escape from Tarkov</a> API.<br>
+This library is currently in alpha. Everything may change significantly in future releases.</p>
+<h2>Features</h2>
+<ul>
+<li>[x] Authentication</li>
+<li>[x] Flea market</li>
+<li>[x] Traders</li>
+<li>[ ] Hideout</li>
+<li>[x] Inventory management(<em>*</em>)</li>
+<li>[ ] Messenger</li>
+<li>[ ] Quests</li>
+</ul>
+<p><em>* Move &amp; Stack are implemented</em></p>
+<h2>Install</h2>
+<pre class="prettyprint source"><code>npm i tarkov
+</code></pre>
+<h2>Usage</h2>
+<pre class="prettyprint source lang-javascript"><code>const { Tarkov, generate_hwid } = require('tarkov');
+const tarkov = new Tarkov();
+
+// Check if launcherVersion is up-to-date
+let lv = await tarkov.checkLauncherVersion();
+console.log('>', lv);
+
+// Check if gameVersion is up-to-date
+let gv = await tarkov.checkGameVersion();
+console.log('>', gv);
+
+// Login with username, pw, hwid
+let t = await tarkov.login(&quot;username&quot;, &quot;pw&quot;, &quot;hwid&quot;);
+
+// Get profiles and select your pmc 
+let profiles = await t.get_profiles();
+let profile = profiles.find(p => p.info.side !== 'Savage');
+await t.select_profile(profile.id);
+console.log(`> Hello, ${profile.info.nickname}!`);
+
+// Get localization strings.
+await t.get_i18n(&quot;en&quot;);
+ 
+// Get all items
+let items = await t.get_items();
+</code></pre>
+<p><strong>Contains many other functions that will be documented later on.</strong></p>
+<h3>Hardware ID</h3>
+<p>Hardware ID (HWID) may be required on authentication, it can either be sniffed from the EFT launcher or generated. It's recommended to save the HWID and reuse it after the first successful authentication.</p>
+<p>Using a fresh HWID means both captcha and 2FA code will be required on your first login attempt. This can be avoid by using the HWID generated by the EFT launcher or authenticating with your session cookie.</p>
+<h3>Captcha</h3>
+<p>This library does not attempt to solve captchas for you, the <code>g-recaptcha-response</code> token from reCAPTCHA may be required on authentication.</p>
+<p>reCAPTCHA can be solved externally using tools like <a href="https://github.com/dzt/captcha-harvester">captcha-harvester</a>.</p>
+<pre class="prettyprint source"><code>URL: https://launcher.escapefromtarkov.com/launcher/login
+Site_key: 6LexEI4UAAAAAIFtNZALcloZfEgHhB8rEUqC1LwV
+</code></pre>
+<h2><em>&quot;Unofficial&quot;</em></h2>
+<p>I should emphasize that this library is <em>unofficial</em>. EFT does not have a public API, everything in this repo was reversed from the game.</p>
+<p>The API is clearly designed for internal use. It contains numerous spelling mistakes, inconsistent conventions, and tons of bad practice JSON. The developers may push breaking changes without prior warning.</p>
+<h2>Want to Contribute?</h2>
+<p><a href="CONTRIBUTING.md">Read this first!</a></p>
+<h2>License</h2>
+<p><a href="LICENSE">MIT</a></p></article>
+    </section>
+
+
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Feb 11 2020 01:15:39 GMT+0200 (Itä-Euroopan normaaliaika) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+
+</body>
+</html>

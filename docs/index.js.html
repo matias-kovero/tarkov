@@ -1,4 +1,50 @@
-require('./lib/globals');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>index.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Exports.Tarkov.html">Tarkov</a><ul class='methods'><li data-type='method'><a href="Exports.Tarkov.html#checkGameVersion">checkGameVersion</a></li><li data-type='method'><a href="Exports.Tarkov.html#checkLauncherVersion">checkLauncherVersion</a></li><li data-type='method'><a href="Exports.Tarkov.html#from_access_token">from_access_token</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_i18n">get_i18n</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_items">get_items</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_profiles">get_profiles</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_trader">get_trader</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_traders">get_traders</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_weather">get_weather</a></li><li data-type='method'><a href="Exports.Tarkov.html#login">login</a></li><li data-type='method'><a href="Exports.Tarkov.html#move_item">move_item</a></li><li data-type='method'><a href="Exports.Tarkov.html#offer_item">offer_item</a></li><li data-type='method'><a href="Exports.Tarkov.html#search_market">search_market</a></li><li data-type='method'><a href="Exports.Tarkov.html#select_profile">select_profile</a></li><li data-type='method'><a href="Exports.Tarkov.html#stack_item">stack_item</a></li></ul></li><li><a href="Profile.html">Profile</a><ul class='methods'><li data-type='method'><a href="Profile.html#getDollars">getDollars</a></li><li data-type='method'><a href="Profile.html#getEuros">getEuros</a></li><li data-type='method'><a href="Profile.html#getItemById">getItemById</a></li><li data-type='method'><a href="Profile.html#getItems">getItems</a></li><li data-type='method'><a href="Profile.html#getRoubles">getRoubles</a></li></ul></li><li><a href="Trader.html">Trader</a></li></ul><h3>Global</h3><ul><li><a href="global.html#generate_hwid">generate_hwid</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>require('./lib/globals');
 const Auth      = require('./lib/auth');
 const auth      = new Auth();
 const Profile   = require('./lib/profile');
@@ -46,7 +92,7 @@ function Tarkov(client=request, hwid, session) {
    */
   Tarkov.prototype.checkGameVersion = async function() {
     let msg = "Serious error. Contact creator";
-    let url = `https://${LAUNCHER_ENDPOINT}/launcher/GetPatchList?launcherVersion=${LAUNCHER_VERSION}&branch=live`;
+    let url = `https://${LAUNCHER_ENDPOINT}/launcher/GetPatchList?launcherVersion=${LAUNCHER_VERSION}&amp;branch=live`;
     let res = await auth.post_json(this.client, url, {});
     if(!res.data[0].Version) msg = 'Issues while fetching gameVersion...';
     else if(res.data[0].Version) {
@@ -96,7 +142,7 @@ function Tarkov(client=request, hwid, session) {
   /* TODO: Fix res.data */
   /**
    * Gets users all profiles. Should containt array [scav, pmc]
-   * @returns {Promise<Profile[]>} Array of profiles
+   * @returns {Promise&lt;Profile[]>} Array of profiles
    */
   Tarkov.prototype.get_profiles = async function() {
     let url = `https://${PROD_ENDPOINT}/client/game/profile/list`;
@@ -123,12 +169,12 @@ function Tarkov(client=request, hwid, session) {
 
   /**
    * Get a list of all traders.
-   * @returns {Promise<Trader[]>} Array of traders
+   * @returns {Promise&lt;Trader[]>} Array of traders
    */
   Tarkov.prototype.get_traders = async function() {
     try {
       let url = `https://${TRADING_ENDPOINT}/client/trading/api/getTradersList`;
-      let res = await this.post_json(url, {}); // TradersResponse <Array>
+      let res = await this.post_json(url, {}); // TradersResponse &lt;Array>
       let traders = res.data.map(trader => { return new Trader(trader) });
       return traders;
     } catch (error) {
@@ -269,7 +315,7 @@ function Tarkov(client=request, hwid, session) {
       };
       let res = await this.post_json(url, body);
       if(res.data.badRequest[0]) return res.data.badRequest[0];
-      else if(res.err == 0 && res.data.items) return res.data.items;
+      else if(res.err == 0 &amp;&amp; res.data.items) return res.data.items;
       else return res;
     } catch(error) {
       console.log(error.message); // 1503 | 1506 | 1507, offerNotFound?
@@ -336,7 +382,7 @@ function Tarkov(client=request, hwid, session) {
 
       let res = await this.post_json(url, body);
       if(res.data.badRequest[0]) return res.data.badRequest[0];
-      else if(res.err == 0 && res.data.items) return res.data.items;
+      else if(res.err == 0 &amp;&amp; res.data.items) return res.data.items;
       else return res;
     } catch(error) {
       console.log(error.message);
@@ -375,7 +421,7 @@ function Tarkov(client=request, hwid, session) {
    * @param {Object} destination - info where to move. {id, container, location:{x,y,r} }
    * @param {String} destination.id - item id where we move
    * @param {String} destination.container - 'main' if its container, else 'hideout' = stash
-   * @param {Object} destination.location - {x, y, r} x & y locations, topleft is 0,0. r = 0 or 1.
+   * @param {Object} destination.location - {x, y, r} x &amp; y locations, topleft is 0,0. r = 0 or 1.
    */
   Tarkov.prototype.move_item = async function(item_id, destination) {
     if(!item_id || !destination.id) return new Error('Invalid params');
@@ -454,4 +500,30 @@ function Tarkov(client=request, hwid, session) {
     }
   }
 
-module.exports = {Tarkov, generate_hwid};
+module.exports = {Tarkov, generate_hwid};</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Feb 11 2020 01:15:39 GMT+0200 (Itä-Euroopan normaaliaika) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+
+</body>
+</html>
