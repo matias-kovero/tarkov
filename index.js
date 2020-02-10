@@ -318,14 +318,14 @@ function Tarkov(client=request, hwid, session) {
       let body = {
         data: [{
           Action: "RagFairAddOffer",
-          sell_in_one_piece: sell_all || false,
+          sellInOnePiece: sell_all || false,
           items: items, // Array of item_ids
           requirements:[{
             _tpl: requirement._tpl,
             count: requirement.price,
             level: 0,
             side: 0,
-            only_functional: false,
+            onlyFunctional: false,
           }],
         tm: 2,
         }],
