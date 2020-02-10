@@ -1,6 +1,8 @@
 # Tarkov &middot; [![NPM](https://img.shields.io/npm/l/tarkov?color=blue&style=plastic)](https://github.com/matias-kovero/tarkov/blob/master/LICENSE) [![npm](https://img.shields.io/npm/v/tarkov?color=blue&style=plastic)](https://www.npmjs.com/package/tarkov) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=plastic)](https://github.com/matias-kovero/tarkov/pulls)
 A js library for the [Escape from Tarkov](https://escapefromtarkov.com) API.  
-This library is currently in alpha. Everything may change significantly in future releases.
+This library is currently in alpha. Everything may change significantly in future releases.  
+
+View [Documentation](https://matias-kovero.github.io/tarkov/)
 ## Features
 - [x] Authentication
 - [x] Flea market
