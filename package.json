@@ -30,7 +30,6 @@
   },
   "homepage": "https://github.com/matias-kovero/tarkov#readme",
   "dependencies": {
-    "crypto": "^1.0.1",
     "pako": "^1.0.11",
     "request-promise-native": "^1.0.8"
   },
