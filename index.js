@@ -428,6 +428,16 @@ function Tarkov(client=request, hwid, session) {
     }
   }
 
+  /**
+   * Keep the current session alive. Session expires after x seconds of idling.
+   */
+  Tarkov.prototype.keep_alive = async function() {
+    let url = `https://${PROD_ENDPOINT}/client/game/keepalive`;
+    let res = await this.post_json(url, {});
+    if(!res || res.err != 0) throw Error(res.errmsg);
+    else if(res.err == 0) return;
+  }
+
   class LocalizationResponse {
     constructor(obj) {
       Object.assign(this, obj);
