@@ -11,11 +11,14 @@
       "plugins/markdown"
   ],
   "opts": {
-      "template": "node_modules/docdash",
+      "template": "node_modules/clean-jsdoc-theme",
       "encoding": "utf8",
       "destination": "docs/",
       "recurse": true,
-      "verbose": true
+      "verbose": true,
+      "theme_opts": {
+        "create_style": "h1.page-title::after, article h1::after{background: #e6e6e6}"
+      }
   },
   "templates": {
       "cleverLinks": false,

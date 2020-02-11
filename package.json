@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "generate-docs": "node_modules/.bin/jsdoc -c jsdoc.json README.md"
+    "generate-docs": "node_modules/.bin/jsdoc --configure jsdoc.json --verbose README.md"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,6 @@
     "request-promise-native": "^1.0.8"
   },
   "devDependencies": {
-    "docdash": "^1.2.0"
+    "clean-jsdoc-theme": "^2.2.10"
   }
 }
