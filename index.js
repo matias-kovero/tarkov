@@ -268,8 +268,8 @@ function Tarkov(client=request, hwid, session) {
         tm: 2,
       };
       let res = await this.post_json(url, body);
-      if(res.data.badRequest[0]) return res.data.badRequest[0];
-      else if(res.err == 0 && res.data.items) return res.data.items;
+      if(res.err == 0 && res.data.items) return res.data.items;
+      else if(res.data.badRequest[0]) return res.data.badRequest[0];
       else return res;
     } catch(error) {
       console.log(error.message); // 1503 | 1506 | 1507, offerNotFound?
