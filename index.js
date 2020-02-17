@@ -221,6 +221,7 @@ function Tarkov(client=request, hwid, session) {
 
   /**
    * Get current forecast and time.
+   * @async
    */
   Tarkov.prototype.get_weather = async function() {
     try {
@@ -246,6 +247,53 @@ function Tarkov(client=request, hwid, session) {
       let items = Object.entries(res.data).map(item => { return new Item(item) });
       return items;
       //else throw new Error(res.errmsg);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  /**
+   * Get messages from Messenger.  
+   * If you know more values, please inform creator.
+   * @param {Number} type 2 = NPC/Quest, 4 = Market, 7 = System
+   * @async
+   * @returns {Object[]} Array of messages
+   */
+  Tarkov.prototype.get_messages = async function(type) {
+    try {
+      if(!type) throw new Error(`Missing parameter type`);
+      let url = `https://${PROD_ENDPOINT}/client/mail/dialog/list`;
+      let res = await this.post_json(url, {});
+      if(res.err != 0 || res.errmsg ) throw new Error(`get_messages error: ${res.errmsg}`);
+      let list = res.data.filter(dialog => dialog.type == type);
+      if(!list.length) throw new Error(`Found nothing with type: ${type}`);
+      else return list;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  /**
+   * Get all attachments of specific message.  
+   * Get the message id from `tarkov.get_messages(Number)`
+   * @param {String} message_id id of the message.
+   * @returns {Object[]} Array of Attachments. Item located at items.data
+   * @async
+   * @example
+   * // Get Ragfair messages
+   * let messages = await tarkov.get_messages(4);
+   * // Select 1st message, and get its attachments
+   * let attachments = await tarkov.get_message_attachments(messages[0]._id);
+   * // Move 1st attachment to users stash
+   * let move = await tarkov.collect_item(attachments[0].items.data[0]_id, profile.inventory.stash, attachments[0]._id);
+   */
+  Tarkov.prototype.get_message_attachments = async function(message_id) {
+    try {
+      if(!message_id) throw new Error(`Missing parameter message_id`);
+      let url = `https://${PROD_ENDPOINT}/client/mail/dialog/getAllAttachments`;
+      let res = await this.post_json(url, {dialogId: message_id});
+      if(res.err != 0 || res.errmsg ) throw new Error(`get_message_attachments error: ${res.errmsg}`);
+      else return res.data.messages;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -429,11 +477,12 @@ function Tarkov(client=request, hwid, session) {
 
   /**
    * Move item in inventory.
+   * @async
    * @param {String} item_id - the item id what we want to move.
    * @param {Object} destination - info where to move. {id, container, location:{x,y,r} }
    * @param {String} destination.id - item id where we move
-   * @param {String} destination.container - 'main' if its container, else 'hideout' = stash
-   * @param {Object} destination.location - {x, y, r} x & y locations, topleft is 0,0. r = 0 or 1.
+   * @param {String} [destination.container="hideout"] - 'main' = container, 'hideout' = stash
+   * @param {Object} [destination.location={x:0,y:0,r:0}] - {x, y, r} x & y locations, topleft is 0,0. r = 0 or 1.
    */
   Tarkov.prototype.move_item = async function(item_id, destination) {
     if(!item_id || !destination.id) return new Error('Invalid params');
@@ -444,16 +493,45 @@ function Tarkov(client=request, hwid, session) {
         item: item_id,
         to:{
           id: destination.id,
-          container: destination.container || 'main', // main = container, hideout = stash 
+          container: destination.container || 'hideout', // main = container, hideout = stash 
           location: destination.location || {x: 0, y: 0, r: 0}, // try to put to topleft if empty
         },
       }],
       tm: 2,
     };
     let res = await this.post_json(url, body);
-    if(res.err != 0) console.log(res);
+    if(res.err != 0) throw new Error(`Move item error: ${res.errmsg}`);
     else if(res.err == 0) return 'Moved';
     //console.log(res);
+  }
+
+  /**
+   * Collect items to stash from messages.
+   * @async
+   * @param {String} item_id collect item id
+   * @param {String} stash_id players stash_id. Get it from `profile.inventory.stash`
+   * @param {String} attachment_id attachments id
+   */
+  Tarkov.prototype.collect_item = async function(item_id, stash_id, attachment_id) {
+    if(!item_id || !stash_id.id || !attachment_id) return new Error('Invalid params');
+    let url = `https://${PROD_ENDPOINT}/client/game/profile/items/moving`;
+    let body = {
+      data: [{
+        Action: "Move",
+        item: item_id,
+        to:{
+          id: stash_id,
+          container:'hideout',
+        },
+        fromOwner: {
+          id: attachment_id,
+          type: 'Mail'
+        }
+      }]
+    };
+    let res = await this.post_json(url, body);
+    if(res.err != 0) throw new Error(`Collect item error: ${res.errmsg}`);
+    else if(res.err == 0) return 'Collected';
   }
 
   /**

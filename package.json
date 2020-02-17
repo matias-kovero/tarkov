@@ -1,6 +1,6 @@
 {
   "name": "tarkov",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A client library for Escape from Tarkov API",
   "main": "index.js",
   "directories": {
@@ -31,6 +31,7 @@
   "homepage": "https://github.com/matias-kovero/tarkov#readme",
   "dependencies": {
     "pako": "^1.0.11",
+    "request": "^2.88.2",
     "request-promise-native": "^1.0.8"
   },
   "devDependencies": {

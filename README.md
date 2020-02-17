@@ -10,10 +10,11 @@ View [Documentation](https://matias-kovero.github.io/tarkov/)
 - [x] Traders
 - [ ] Hideout
 - [x] Inventory management(_*_)  
-- [ ] Messenger
+- [x] Messenger(_**_)
 - [ ] Quests
 
-_* Move & Stack are implemented_
+_* Move & Stack are implemented_  
+_** Ragfair, System & Quests_
 ## Install
 ```
 npm i tarkov
