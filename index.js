@@ -1,10 +1,10 @@
 require('./lib/globals');
-const Auth      = require('./lib/auth');
-const auth      = new Auth();
-const Profile   = require('./lib/profile');
-const Trader    = require('./lib/trader');
-const Item      = require('./lib/item');
-const generate_hwid  = require('./lib/hwid');
+const Auth            = require('./lib/auth');
+const auth            = new Auth();
+const Profile         = require('./lib/profile');
+const Trader          = require('./lib/trader');
+const Item            = require('./lib/item');
+const generate_hwid   = require('./lib/hwid');
 
 
 /**
@@ -90,6 +90,26 @@ function Tarkov(client=request, hwid, session) {
       return Tarkov(this.client, hwid.toString(), session.session);
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  /**
+   * Login with email, password and 2FA code
+   * @param {String} email user email
+   * @param {String} password user password
+   * @param {String} code 2FA code
+   * @param {String} hwid hardware id (#1-XXXXXXXXXX...)
+   */
+  
+  Tarkov.prototype.login_with_2fa = async function(email, password, code, hwid) {
+    try {
+      if(!email || !password || !code || !hwid) throw new Error('Invalid parameters');
+      await auth.activate_hardware(this.client, email, password, code, hwid);
+      let user = await auth.login(this.client, email, password, null, hwid);
+      let session = await auth.exchange_access_token(this.client, user.access_token, hwid);
+      return Tarkov(this.client, hwid.toString(), session.session);
+    } catch (err) {
+      console.log(err.message);
     }
   }
 
@@ -200,14 +220,6 @@ function Tarkov(client=request, hwid, session) {
   }
 
   /**
-  * Keep the current session alive
-  */
- /*
-  async keep_alive() {
-    let url = `${PROD_ENDPOINT}/client/game/keepalive`
-  }*/
-
-  /**
    * @param {Number} page - starting page, ex. start searching from page 0.
    * @param {Number} limit - limit how many results to show. Ex 15.
    * @param {Object} filter - Market Filter
@@ -247,7 +259,6 @@ function Tarkov(client=request, hwid, session) {
       return new Error(error.message);
     }
   }
-
 
   Tarkov.prototype.buy_item = async function(offer_id, quantity, barter_item) {
     try {
@@ -464,4 +475,4 @@ function Tarkov(client=request, hwid, session) {
     }
   }
 
-module.exports = {Tarkov, generate_hwid};
+module.exports = { Tarkov, generate_hwid };
