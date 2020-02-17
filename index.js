@@ -65,9 +65,17 @@ function Tarkov(client=request, hwid, session) {
    * Login with email and password.
    * @param {String} email user email
    * @param {String} password password
-   * @param {String} hwid hardware id (#1-XXXXXXXXXX...)
+   * @param {String} hwid hardware id
+   * @returns {Tarkov} Tarkov session
+   * @async
+   * @example
+   * // Init Tarkov
+   * let tarkov = new Tarkov();
+   * // Login and save instance to t
+   * let t = await tarkov.login("username@domain.com", "p@assw0rd", "yourHWID");
+   * // Will print your session id.
+   * console.log(`Session ID: ${t.session}`);
    */
-  
   Tarkov.prototype.login = async function(email, password, hwid) {
     try {
       let user = await auth.login(this.client, email, password, null, hwid);
@@ -82,8 +90,9 @@ function Tarkov(client=request, hwid, session) {
    * Login with a Bearer token.
    * @param {String} access_token
    * @param {String} hwid 
+   * @private
+   * Can't really see anyone would login with this. AFAIK internal use only.
    */
-  
   Tarkov.prototype.from_access_token = async function(access_token, hwid) {
     try {
       let session = await auth.exchange_access_token(this.client, access_token, hwid);
@@ -98,9 +107,17 @@ function Tarkov(client=request, hwid, session) {
    * @param {String} email user email
    * @param {String} password user password
    * @param {String} code 2FA code
-   * @param {String} hwid hardware id (#1-XXXXXXXXXX...)
+   * @param {String} hwid hardware id
+   * @returns {Tarkov} Tarkov session
+   * @async
+   * @example
+   * // Init Tarkov
+   * let tarkov = new Tarkov();
+   * // Login and save instance to t
+   * let t = await tarkov.login_with_2fa("username@domain.com", "p@assw0rd", "2FACode", "yourHWID");
+   * // Will print your session id.
+   * console.log(`Session ID: ${t.session}`);
    */
-  
   Tarkov.prototype.login_with_2fa = async function(email, password, code, hwid) {
     try {
       if(!email || !password || !code || !hwid) throw new Error('Invalid parameters');
@@ -115,8 +132,10 @@ function Tarkov(client=request, hwid, session) {
 
   /* TODO: Fix res.data */
   /**
-   * Gets users all profiles. Should containt array [scav, pmc]
+   * Gets users all profiles.  
+   * Used to select players profile after login.
    * @returns {Promise<Profile[]>} Array of profiles
+   * @async
    */
   Tarkov.prototype.get_profiles = async function() {
     let url = `https://${PROD_ENDPOINT}/client/game/profile/list`;
@@ -126,8 +145,16 @@ function Tarkov(client=request, hwid, session) {
   }
 
   /**
-   * Select profile id.
-   * @param user_id profile id
+   * Select profile with its profile id.
+   * @param {String} user_id profile id
+   * @async
+   * @example
+   * // Get profiles
+   * let profiles = await tarkov.get_profiles();
+   * // Get profile that isn't scav -> Your pmc
+   * let profile = profiles.find(p => p.info.side !== 'Savage');
+   * // Select the profile
+   * await tarkov.select_profile(profile.id);
    */
   Tarkov.prototype.select_profile = async function(user_id) {
     try {
@@ -167,7 +194,7 @@ function Tarkov(client=request, hwid, session) {
    * // Get traders  
    * let traders = await t.get_traders();  
    * // Get traders Fence information
-   * let trader = traders.find(t => locale.trading[t.id].Nickname == "Fence");
+   * let trader = traders.find(t => locale.trading[t.id].nickname == "Fence");
    * ```
    */
   Tarkov.prototype.get_trader = async function(trader_id) {
@@ -179,8 +206,10 @@ function Tarkov(client=request, hwid, session) {
   }
 
   /**
-   * Get localization table. Pass a valid ISO 639-1 language code.
-   * @param language - Valid ISO 639-1 language code.
+   * Get localization table. Pass a valid ISO 639-1 language code.  
+   * List of valid codes: {TODO}
+   * @param {String} language - Valid ISO 639-1 language code.
+   * @async
    */
   Tarkov.prototype.get_i18n = async function(language) {
     if(!language) return Error("Invalid or empty language");
@@ -205,7 +234,10 @@ function Tarkov(client=request, hwid, session) {
   }
 
   /**
-   * Gets all items.
+   * Gets all the items from the game.  
+   * Note! This returns all the items from the game, not items from your inventory.
+   * @returns {Item[]} Array with all the items from the game.
+   * @async
    */
   Tarkov.prototype.get_items = async function() {
     try {
@@ -220,10 +252,25 @@ function Tarkov(client=request, hwid, session) {
   }
 
   /**
-   * @param {Number} page - starting page, ex. start searching from page 0.
-   * @param {Number} limit - limit how many results to show. Ex 15.
+   * Search offers from Flea Market.
+   * @async
+   * @param {Number} page - starting page, example: start searching from page 0.
+   * @param {Number} limit - limit how many results to show. Example: 15.
    * @param {Object} filter - Market Filter
-   * @param {Number} filter.sort_type - Sort by: ID = 0, Barter = 2, Mechant Rating = 3, Price = 5, Expiry = 6
+   * @param {Number} [filter.sort_type=5] - ID = 0, Barter = 2, Mechant Rating = 3, Price = 5, Expiry = 6
+   * @param {Number} [filter.sort_direction=0] - Ascending = 0, Descending = 1
+   * @param {Number} [filter.currency=0] - All = 0, RUB = 1, USD = 2, EUR = 3
+   * @param {Number} [filter.min_price=0] - Won't show offers below this number
+   * @param {Number} [filter.max_price=0] - Won't show offers higher than this number
+   * @param {Number} [filter.min_condition=0] - Won't show offers where item won't match minium condition
+   * @param {Number} [filter.max_condition=100] - Won't show offers where item won't match maxium condition
+   * @param {Boolean} [filter.expiring_within_hour=false] - Show items that are expiring within hour
+   * @param {Boolean} [filter.hide_bartering_offers=true] - Should we hide bartering offers
+   * @param {Number} [filter.owner_type=0] - Any owner = 0, Listed by traders = 1, Listed by players = 2
+   * @param {Boolean} [filter.hide_inoperable_weapons=true] - Hide weapons that are inoperable
+   * @param {String} [filter.handbook_id=""] - item id you are searching
+   * @param {String} [filter.linked_search_id=""] - if you are performing linked item search, include item id
+   * @param {String} [filter.required_search_id=""] - if you are performing required item search, include item id
    */
   Tarkov.prototype.search_market = async function(page, limit, filter) {
     try {
@@ -234,7 +281,7 @@ function Tarkov(client=request, hwid, session) {
         limit: limit,
         sortType: filter.sort_type || 5,
         sortDirection: filter.sort_direction || 0,
-        currency: filter.currency || 0, // 0=all, 1=rub, 2=usd, 3=eur
+        currency: filter.currency || 0,
         priceFrom: filter.min_price || 0,
         priceTo: filter.max_price || 0,
         quantityFrom: filter.min_quantity || 0,
@@ -243,8 +290,8 @@ function Tarkov(client=request, hwid, session) {
         conditionTo: filter.max_condition || 100,
         oneHourExpiration: filter.expiring_within_hour || false,
         removeBartering: filter.hide_bartering_offers || true,
-        offerOwnerType: filter.owener_type || 0,
-        onlyFunctional: filter.hide_inperable_weapons || true,
+        offerOwnerType: filter.owner_type || 0,
+        onlyFunctional: filter.hide_inoperable_weapons || true,
         updateOfferCount: true,
         handbookId: filter.handbook_id || "",
         linkedSearchId: filter.linked_search_id || "",
@@ -440,7 +487,11 @@ function Tarkov(client=request, hwid, session) {
   }
 
   /**
-   * Keep the current session alive. Session expires after x seconds of idling.
+   * Keep the current session alive. Session expires after ~30 seconds of idling.
+   * @async
+   * @example
+   * // Will extend the sessions for ~30 sec
+   * await tarkov.keep_alive();
    */
   Tarkov.prototype.keep_alive = async function() {
     let url = `https://${PROD_ENDPOINT}/client/game/keepalive`;

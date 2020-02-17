@@ -46,7 +46,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html"><div class="text">Home</div></a></h2><div class="search-box"><input type="text" placeholder="Search..." id="search-box" /><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-list-div"><h3>Classes</h3><ul><li><a href="Exports.Tarkov.html">Tarkov</a><ul class='methods'><li data-type='method'><a href="Exports.Tarkov.html#checkGameVersion">checkGameVersion</a></li><li data-type='method'><a href="Exports.Tarkov.html#checkLauncherVersion">checkLauncherVersion</a></li><li data-type='method'><a href="Exports.Tarkov.html#from_access_token">from_access_token</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_i18n">get_i18n</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_items">get_items</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_profiles">get_profiles</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_trader">get_trader</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_traders">get_traders</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_weather">get_weather</a></li><li data-type='method'><a href="Exports.Tarkov.html#keep_alive">keep_alive</a></li><li data-type='method'><a href="Exports.Tarkov.html#login">login</a></li><li data-type='method'><a href="Exports.Tarkov.html#move_item">move_item</a></li><li data-type='method'><a href="Exports.Tarkov.html#offer_item">offer_item</a></li><li data-type='method'><a href="Exports.Tarkov.html#search_market">search_market</a></li><li data-type='method'><a href="Exports.Tarkov.html#select_profile">select_profile</a></li><li data-type='method'><a href="Exports.Tarkov.html#stack_item">stack_item</a></li></ul></li><li><a href="Profile.html">Profile</a><ul class='methods'><li data-type='method'><a href="Profile.html#addItems">addItems</a></li><li data-type='method'><a href="Profile.html#getDollars">getDollars</a></li><li data-type='method'><a href="Profile.html#getEuros">getEuros</a></li><li data-type='method'><a href="Profile.html#getItemById">getItemById</a></li><li data-type='method'><a href="Profile.html#getItems">getItems</a></li><li data-type='method'><a href="Profile.html#getRoubles">getRoubles</a></li><li data-type='method'><a href="Profile.html#removeItems">removeItems</a></li><li data-type='method'><a href="Profile.html#updateItems">updateItems</a></li></ul></li><li><a href="Trader.html">Trader</a></li></ul><h3><a href="global.html">Global</a></h3><ul><li><a href="global.html#generate_hwid">generate_hwid</a></li></ul></div>
+    <h2><a href="index.html"><div class="text">Home</div></a></h2><div class="search-box"><input type="text" placeholder="Search..." id="search-box" /><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-list-div"><h3>Classes</h3><ul><li><a href="Exports.Tarkov.html">Tarkov</a><ul class='methods'><li data-type='method'><a href="Exports.Tarkov.html#checkGameVersion">checkGameVersion</a></li><li data-type='method'><a href="Exports.Tarkov.html#checkLauncherVersion">checkLauncherVersion</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_i18n">get_i18n</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_items">get_items</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_profiles">get_profiles</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_trader">get_trader</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_traders">get_traders</a></li><li data-type='method'><a href="Exports.Tarkov.html#get_weather">get_weather</a></li><li data-type='method'><a href="Exports.Tarkov.html#keep_alive">keep_alive</a></li><li data-type='method'><a href="Exports.Tarkov.html#login">login</a></li><li data-type='method'><a href="Exports.Tarkov.html#login_with_2fa">login_with_2fa</a></li><li data-type='method'><a href="Exports.Tarkov.html#move_item">move_item</a></li><li data-type='method'><a href="Exports.Tarkov.html#offer_item">offer_item</a></li><li data-type='method'><a href="Exports.Tarkov.html#search_market">search_market</a></li><li data-type='method'><a href="Exports.Tarkov.html#select_profile">select_profile</a></li><li data-type='method'><a href="Exports.Tarkov.html#stack_item">stack_item</a></li></ul></li><li><a href="Profile.html">Profile</a><ul class='methods'><li data-type='method'><a href="Profile.html#addItems">addItems</a></li><li data-type='method'><a href="Profile.html#getDollars">getDollars</a></li><li data-type='method'><a href="Profile.html#getEuros">getEuros</a></li><li data-type='method'><a href="Profile.html#getItemById">getItemById</a></li><li data-type='method'><a href="Profile.html#getItems">getItems</a></li><li data-type='method'><a href="Profile.html#getRoubles">getRoubles</a></li><li data-type='method'><a href="Profile.html#removeItems">removeItems</a></li><li data-type='method'><a href="Profile.html#updateItems">updateItems</a></li></ul></li><li><a href="Trader.html">Trader</a></li></ul><h3><a href="global.html">Global</a></h3><ul><li><a href="global.html#generate_hwid">generate_hwid</a></li></ul></div>
 </nav>
 
 <div id="main">
@@ -62,12 +62,12 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>require('./lib/globals');
-const Auth      = require('./lib/auth');
-const auth      = new Auth();
-const Profile   = require('./lib/profile');
-const Trader    = require('./lib/trader');
-const Item      = require('./lib/item');
-const generate_hwid  = require('./lib/hwid');
+const Auth            = require('./lib/auth');
+const auth            = new Auth();
+const Profile         = require('./lib/profile');
+const Trader          = require('./lib/trader');
+const Item            = require('./lib/item');
+const generate_hwid   = require('./lib/hwid');
 
 
 /**
@@ -128,9 +128,17 @@ function Tarkov(client=request, hwid, session) {
    * Login with email and password.
    * @param {String} email user email
    * @param {String} password password
-   * @param {String} hwid hardware id (#1-XXXXXXXXXX...)
+   * @param {String} hwid hardware id
+   * @returns {Tarkov} Tarkov session
+   * @async
+   * @example
+   * // Init Tarkov
+   * let tarkov = new Tarkov();
+   * // Login and save instance to t
+   * let t = await tarkov.login("username@domain.com", "p@assw0rd", "yourHWID");
+   * // Will print your session id.
+   * console.log(`Session ID: ${t.session}`);
    */
-  
   Tarkov.prototype.login = async function(email, password, hwid) {
     try {
       let user = await auth.login(this.client, email, password, null, hwid);
@@ -145,8 +153,9 @@ function Tarkov(client=request, hwid, session) {
    * Login with a Bearer token.
    * @param {String} access_token
    * @param {String} hwid 
+   * @private
+   * Can't really see anyone would login with this. AFAIK internal use only.
    */
-  
   Tarkov.prototype.from_access_token = async function(access_token, hwid) {
     try {
       let session = await auth.exchange_access_token(this.client, access_token, hwid);
@@ -156,10 +165,40 @@ function Tarkov(client=request, hwid, session) {
     }
   }
 
+  /**
+   * Login with email, password and 2FA code
+   * @param {String} email user email
+   * @param {String} password user password
+   * @param {String} code 2FA code
+   * @param {String} hwid hardware id
+   * @returns {Tarkov} Tarkov session
+   * @async
+   * @example
+   * // Init Tarkov
+   * let tarkov = new Tarkov();
+   * // Login and save instance to t
+   * let t = await tarkov.login_with_2fa("username@domain.com", "p@assw0rd", "2FACode", "yourHWID");
+   * // Will print your session id.
+   * console.log(`Session ID: ${t.session}`);
+   */
+  Tarkov.prototype.login_with_2fa = async function(email, password, code, hwid) {
+    try {
+      if(!email || !password || !code || !hwid) throw new Error('Invalid parameters');
+      await auth.activate_hardware(this.client, email, password, code, hwid);
+      let user = await auth.login(this.client, email, password, null, hwid);
+      let session = await auth.exchange_access_token(this.client, user.access_token, hwid);
+      return Tarkov(this.client, hwid.toString(), session.session);
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
   /* TODO: Fix res.data */
   /**
-   * Gets users all profiles. Should containt array [scav, pmc]
+   * Gets users all profiles.  
+   * Used to select players profile after login.
    * @returns {Promise&lt;Profile[]>} Array of profiles
+   * @async
    */
   Tarkov.prototype.get_profiles = async function() {
     let url = `https://${PROD_ENDPOINT}/client/game/profile/list`;
@@ -169,8 +208,16 @@ function Tarkov(client=request, hwid, session) {
   }
 
   /**
-   * Select profile id.
-   * @param user_id profile id
+   * Select profile with its profile id.
+   * @param {String} user_id profile id
+   * @async
+   * @example
+   * // Get profiles
+   * let profiles = await tarkov.get_profiles();
+   * // Get profile that isn't scav -> Your pmc
+   * let profile = profiles.find(p => p.info.side !== 'Savage');
+   * // Select the profile
+   * await tarkov.select_profile(profile.id);
    */
   Tarkov.prototype.select_profile = async function(user_id) {
     try {
@@ -210,7 +257,7 @@ function Tarkov(client=request, hwid, session) {
    * // Get traders  
    * let traders = await t.get_traders();  
    * // Get traders Fence information
-   * let trader = traders.find(t => locale.trading[t.id].Nickname == "Fence");
+   * let trader = traders.find(t => locale.trading[t.id].nickname == "Fence");
    * ```
    */
   Tarkov.prototype.get_trader = async function(trader_id) {
@@ -222,8 +269,10 @@ function Tarkov(client=request, hwid, session) {
   }
 
   /**
-   * Get localization table. Pass a valid ISO 639-1 language code.
-   * @param language - Valid ISO 639-1 language code.
+   * Get localization table. Pass a valid ISO 639-1 language code.  
+   * List of valid codes: {TODO}
+   * @param {String} language - Valid ISO 639-1 language code.
+   * @async
    */
   Tarkov.prototype.get_i18n = async function(language) {
     if(!language) return Error("Invalid or empty language");
@@ -248,7 +297,10 @@ function Tarkov(client=request, hwid, session) {
   }
 
   /**
-   * Gets all items.
+   * Gets all the items from the game.  
+   * Note! This returns all the items from the game, not items from your inventory.
+   * @returns {Item[]} Array with all the items from the game.
+   * @async
    */
   Tarkov.prototype.get_items = async function() {
     try {
@@ -263,18 +315,25 @@ function Tarkov(client=request, hwid, session) {
   }
 
   /**
-  * Keep the current session alive
-  */
- /*
-  async keep_alive() {
-    let url = `${PROD_ENDPOINT}/client/game/keepalive`
-  }*/
-
-  /**
-   * @param {Number} page - starting page, ex. start searching from page 0.
-   * @param {Number} limit - limit how many results to show. Ex 15.
+   * Search offers from Flea Market.
+   * @async
+   * @param {Number} page - starting page, example: start searching from page 0.
+   * @param {Number} limit - limit how many results to show. Example: 15.
    * @param {Object} filter - Market Filter
-   * @param {Number} filter.sort_type - Sort by: ID = 0, Barter = 2, Mechant Rating = 3, Price = 5, Expiry = 6
+   * @param {Number} [filter.sort_type=5] - ID = 0, Barter = 2, Mechant Rating = 3, Price = 5, Expiry = 6
+   * @param {Number} [filter.sort_direction=0] - Ascending = 0, Descending = 1
+   * @param {Number} [filter.currency=0] - All = 0, RUB = 1, USD = 2, EUR = 3
+   * @param {Number} [filter.min_price=0] - Won't show offers below this number
+   * @param {Number} [filter.max_price=0] - Won't show offers higher than this number
+   * @param {Number} [filter.min_condition=0] - Won't show offers where item won't match minium condition
+   * @param {Number} [filter.max_condition=100] - Won't show offers where item won't match maxium condition
+   * @param {Boolean} [filter.expiring_within_hour=false] - Show items that are expiring within hour
+   * @param {Boolean} [filter.hide_bartering_offers=true] - Should we hide bartering offers
+   * @param {Number} [filter.owner_type=0] - Any owner = 0, Listed by traders = 1, Listed by players = 2
+   * @param {Boolean} [filter.hide_inoperable_weapons=true] - Hide weapons that are inoperable
+   * @param {String} [filter.handbook_id=""] - item id you are searching
+   * @param {String} [filter.linked_search_id=""] - if you are performing linked item search, include item id
+   * @param {String} [filter.required_search_id=""] - if you are performing required item search, include item id
    */
   Tarkov.prototype.search_market = async function(page, limit, filter) {
     try {
@@ -285,7 +344,7 @@ function Tarkov(client=request, hwid, session) {
         limit: limit,
         sortType: filter.sort_type || 5,
         sortDirection: filter.sort_direction || 0,
-        currency: filter.currency || 0, // 0=all, 1=rub, 2=usd, 3=eur
+        currency: filter.currency || 0,
         priceFrom: filter.min_price || 0,
         priceTo: filter.max_price || 0,
         quantityFrom: filter.min_quantity || 0,
@@ -294,8 +353,8 @@ function Tarkov(client=request, hwid, session) {
         conditionTo: filter.max_condition || 100,
         oneHourExpiration: filter.expiring_within_hour || false,
         removeBartering: filter.hide_bartering_offers || true,
-        offerOwnerType: filter.owener_type || 0,
-        onlyFunctional: filter.hide_inperable_weapons || true,
+        offerOwnerType: filter.owner_type || 0,
+        onlyFunctional: filter.hide_inoperable_weapons || true,
         updateOfferCount: true,
         handbookId: filter.handbook_id || "",
         linkedSearchId: filter.linked_search_id || "",
@@ -310,7 +369,6 @@ function Tarkov(client=request, hwid, session) {
       return new Error(error.message);
     }
   }
-
 
   Tarkov.prototype.buy_item = async function(offer_id, quantity, barter_item) {
     try {
@@ -331,8 +389,8 @@ function Tarkov(client=request, hwid, session) {
         tm: 2,
       };
       let res = await this.post_json(url, body);
-      if(res.data.badRequest[0]) return res.data.badRequest[0];
-      else if(res.err == 0 &amp;&amp; res.data.items) return res.data.items;
+      if(res.err == 0 &amp;&amp; res.data.items) return res.data.items;
+      else if(res.data.badRequest[0]) return res.data.badRequest[0];
       else return res;
     } catch(error) {
       console.log(error.message); // 1503 | 1506 | 1507, offerNotFound?
@@ -492,7 +550,11 @@ function Tarkov(client=request, hwid, session) {
   }
 
   /**
-   * Keep the current session alive. Session expires after x seconds of idling.
+   * Keep the current session alive. Session expires after ~30 seconds of idling.
+   * @async
+   * @example
+   * // Will extend the sessions for ~30 sec
+   * await tarkov.keep_alive();
    */
   Tarkov.prototype.keep_alive = async function() {
     let url = `https://${PROD_ENDPOINT}/client/game/keepalive`;
@@ -527,7 +589,7 @@ function Tarkov(client=request, hwid, session) {
     }
   }
 
-module.exports = {Tarkov, generate_hwid};</code></pre>
+module.exports = { Tarkov, generate_hwid };</code></pre>
         </article>
     </section>
 
@@ -545,7 +607,7 @@ module.exports = {Tarkov, generate_hwid};</code></pre>
 <script>prettyPrint();</script>
 <script src="scripts/linenumber.js"></script>
 <script>
-var list = [{"title":"Tarkov","link":"<a href=\"Exports.Tarkov.html\">Tarkov</a>"},{"title":"Exports.Tarkov#checkGameVersion","link":"<a href=\"Exports.Tarkov.html#checkGameVersion\">Exports.Tarkov &rtrif; checkGameVersion</a>"},{"title":"Exports.Tarkov#checkLauncherVersion","link":"<a href=\"Exports.Tarkov.html#checkLauncherVersion\">Exports.Tarkov &rtrif; checkLauncherVersion</a>"},{"title":"Exports.Tarkov#from_access_token","link":"<a href=\"Exports.Tarkov.html#from_access_token\">Exports.Tarkov &rtrif; from_access_token</a>"},{"title":"Exports.Tarkov#get_i18n","link":"<a href=\"Exports.Tarkov.html#get_i18n\">Exports.Tarkov &rtrif; get_i18n</a>"},{"title":"Exports.Tarkov#get_items","link":"<a href=\"Exports.Tarkov.html#get_items\">Exports.Tarkov &rtrif; get_items</a>"},{"title":"Exports.Tarkov#get_profiles","link":"<a href=\"Exports.Tarkov.html#get_profiles\">Exports.Tarkov &rtrif; get_profiles</a>"},{"title":"Exports.Tarkov#get_trader","link":"<a href=\"Exports.Tarkov.html#get_trader\">Exports.Tarkov &rtrif; get_trader</a>"},{"title":"Exports.Tarkov#get_traders","link":"<a href=\"Exports.Tarkov.html#get_traders\">Exports.Tarkov &rtrif; get_traders</a>"},{"title":"Exports.Tarkov#get_weather","link":"<a href=\"Exports.Tarkov.html#get_weather\">Exports.Tarkov &rtrif; get_weather</a>"},{"title":"Exports.Tarkov#keep_alive","link":"<a href=\"Exports.Tarkov.html#keep_alive\">Exports.Tarkov &rtrif; keep_alive</a>"},{"title":"Exports.Tarkov#login","link":"<a href=\"Exports.Tarkov.html#login\">Exports.Tarkov &rtrif; login</a>"},{"title":"Exports.Tarkov#move_item","link":"<a href=\"Exports.Tarkov.html#move_item\">Exports.Tarkov &rtrif; move_item</a>"},{"title":"Exports.Tarkov#offer_item","link":"<a href=\"Exports.Tarkov.html#offer_item\">Exports.Tarkov &rtrif; offer_item</a>"},{"title":"Exports.Tarkov#search_market","link":"<a href=\"Exports.Tarkov.html#search_market\">Exports.Tarkov &rtrif; search_market</a>"},{"title":"Exports.Tarkov#select_profile","link":"<a href=\"Exports.Tarkov.html#select_profile\">Exports.Tarkov &rtrif; select_profile</a>"},{"title":"Exports.Tarkov#stack_item","link":"<a href=\"Exports.Tarkov.html#stack_item\">Exports.Tarkov &rtrif; stack_item</a>"},{"title":"Profile","link":"<a href=\"Profile.html\">Profile</a>"},{"title":"Profile#addItems","link":"<a href=\"Profile.html#addItems\">Profile &rtrif; addItems</a>"},{"title":"Profile#getDollars","link":"<a href=\"Profile.html#getDollars\">Profile &rtrif; getDollars</a>"},{"title":"Profile#getEuros","link":"<a href=\"Profile.html#getEuros\">Profile &rtrif; getEuros</a>"},{"title":"Profile#getItemById","link":"<a href=\"Profile.html#getItemById\">Profile &rtrif; getItemById</a>"},{"title":"Profile#getItems","link":"<a href=\"Profile.html#getItems\">Profile &rtrif; getItems</a>"},{"title":"Profile#getRoubles","link":"<a href=\"Profile.html#getRoubles\">Profile &rtrif; getRoubles</a>"},{"title":"Profile#removeItems","link":"<a href=\"Profile.html#removeItems\">Profile &rtrif; removeItems</a>"},{"title":"Profile#updateItems","link":"<a href=\"Profile.html#updateItems\">Profile &rtrif; updateItems</a>"},{"title":"Trader","link":"<a href=\"Trader.html\">Trader</a>"},{"title":"generate_hwid","link":"<a href=\"global.html#generate_hwid\">Global &rtrif; generate_hwid</a>"}];
+var list = [{"title":"Tarkov","link":"<a href=\"Exports.Tarkov.html\">Tarkov</a>"},{"title":"Exports.Tarkov#checkGameVersion","link":"<a href=\"Exports.Tarkov.html#checkGameVersion\">Exports.Tarkov &rtrif; checkGameVersion</a>"},{"title":"Exports.Tarkov#checkLauncherVersion","link":"<a href=\"Exports.Tarkov.html#checkLauncherVersion\">Exports.Tarkov &rtrif; checkLauncherVersion</a>"},{"title":"Exports.Tarkov#get_i18n","link":"<a href=\"Exports.Tarkov.html#get_i18n\">Exports.Tarkov &rtrif; get_i18n</a>"},{"title":"Exports.Tarkov#get_items","link":"<a href=\"Exports.Tarkov.html#get_items\">Exports.Tarkov &rtrif; get_items</a>"},{"title":"Exports.Tarkov#get_profiles","link":"<a href=\"Exports.Tarkov.html#get_profiles\">Exports.Tarkov &rtrif; get_profiles</a>"},{"title":"Exports.Tarkov#get_trader","link":"<a href=\"Exports.Tarkov.html#get_trader\">Exports.Tarkov &rtrif; get_trader</a>"},{"title":"Exports.Tarkov#get_traders","link":"<a href=\"Exports.Tarkov.html#get_traders\">Exports.Tarkov &rtrif; get_traders</a>"},{"title":"Exports.Tarkov#get_weather","link":"<a href=\"Exports.Tarkov.html#get_weather\">Exports.Tarkov &rtrif; get_weather</a>"},{"title":"Exports.Tarkov#keep_alive","link":"<a href=\"Exports.Tarkov.html#keep_alive\">Exports.Tarkov &rtrif; keep_alive</a>"},{"title":"Exports.Tarkov#login","link":"<a href=\"Exports.Tarkov.html#login\">Exports.Tarkov &rtrif; login</a>"},{"title":"Exports.Tarkov#login_with_2fa","link":"<a href=\"Exports.Tarkov.html#login_with_2fa\">Exports.Tarkov &rtrif; login_with_2fa</a>"},{"title":"Exports.Tarkov#move_item","link":"<a href=\"Exports.Tarkov.html#move_item\">Exports.Tarkov &rtrif; move_item</a>"},{"title":"Exports.Tarkov#offer_item","link":"<a href=\"Exports.Tarkov.html#offer_item\">Exports.Tarkov &rtrif; offer_item</a>"},{"title":"Exports.Tarkov#search_market","link":"<a href=\"Exports.Tarkov.html#search_market\">Exports.Tarkov &rtrif; search_market</a>"},{"title":"Exports.Tarkov#select_profile","link":"<a href=\"Exports.Tarkov.html#select_profile\">Exports.Tarkov &rtrif; select_profile</a>"},{"title":"Exports.Tarkov#stack_item","link":"<a href=\"Exports.Tarkov.html#stack_item\">Exports.Tarkov &rtrif; stack_item</a>"},{"title":"Profile","link":"<a href=\"Profile.html\">Profile</a>"},{"title":"Profile#addItems","link":"<a href=\"Profile.html#addItems\">Profile &rtrif; addItems</a>"},{"title":"Profile#getDollars","link":"<a href=\"Profile.html#getDollars\">Profile &rtrif; getDollars</a>"},{"title":"Profile#getEuros","link":"<a href=\"Profile.html#getEuros\">Profile &rtrif; getEuros</a>"},{"title":"Profile#getItemById","link":"<a href=\"Profile.html#getItemById\">Profile &rtrif; getItemById</a>"},{"title":"Profile#getItems","link":"<a href=\"Profile.html#getItems\">Profile &rtrif; getItems</a>"},{"title":"Profile#getRoubles","link":"<a href=\"Profile.html#getRoubles\">Profile &rtrif; getRoubles</a>"},{"title":"Profile#removeItems","link":"<a href=\"Profile.html#removeItems\">Profile &rtrif; removeItems</a>"},{"title":"Profile#updateItems","link":"<a href=\"Profile.html#updateItems\">Profile &rtrif; updateItems</a>"},{"title":"Trader","link":"<a href=\"Trader.html\">Trader</a>"},{"title":"generate_hwid","link":"<a href=\"global.html#generate_hwid\">Global &rtrif; generate_hwid</a>"}];
 setupSearch(list)
 </script>
 
