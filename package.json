@@ -1,6 +1,6 @@
 {
   "name": "tarkov",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A client library for Escape from Tarkov API",
   "main": "index.js",
   "directories": {

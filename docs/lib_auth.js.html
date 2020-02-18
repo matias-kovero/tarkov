@@ -98,9 +98,10 @@ class Auth {
         let res = await this.post_json(client, url, body);
         // Check if response was successful
         res = new LoginResponse(res);
-        // Custom errors
+
         res = handle_auth_error(res);
         // Return Auth
+        if(!res.data) return res;
         return new Auth(res.data);
       } catch (err) {
         console.log('[LOGIN]',new Date(), err.message);
@@ -147,12 +148,12 @@ class Auth {
     let url = `https://${LAUNCHER_ENDPOINT}/launcher/hardwareCode/activate?launcherVersion=${LAUNCHER_VERSION}`;
     let body =  {
       email: email,
-      hwCode: hwid,
+      device_id: hwid,
       activateCode: code,
     };
     let res = await this.post_json(client, url, body);
     if(!res.err || res.err == 0) return;
-    else if(res.err != 0) throw new Error(errmsg);
+    else if(res.err != 0) throw new Error(res.errmsg);
   }
 
   async post_json(client, url, req_body) {
@@ -181,13 +182,13 @@ class Auth {
 //======================
 
 function handle_auth_error(obj) {
-  if(!isNaN(obj.err) &amp;&amp; !obj.err === 0) {
+  if(!isNaN(obj.err) &amp;&amp; !obj.err == 0) {
     switch(obj.err) {
       //case 0: return obj;
       case 201: return 'Not Authorized';
       case 207: return 'Missing parameters';
-      case 209: return 'TwoFactorRequired';
-      case 211: return 'BadTowFactorCode';
+      case 209: return 'TwoFactorRequired! Received new hardware code. Check email for 2FA code.';
+      case 211: return 'BadTwoFactorCode';
       case 214: return 'CaptchaRequired';
       default: return `Unknown API Error: ${obj.err}`;
     }
@@ -223,9 +224,10 @@ class LoginResponse {
    * @param {Error} obj.error response error
    * @param {Object} obj.data response data 
    */
-  constructor({err, data}) {
+  constructor({err, data, errmsg}) {
     this.err = err;
     this.data = data;
+    this.errmsg = errmsg
   }
   toJSON() {
     return Object.getOwnPropertyNames(this).reduce((a, b) => {
