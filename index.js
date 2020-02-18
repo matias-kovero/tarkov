@@ -79,6 +79,7 @@ function Tarkov(client=request, hwid, session) {
   Tarkov.prototype.login = async function(email, password, hwid) {
     try {
       let user = await auth.login(this.client, email, password, null, hwid);
+      if(!user.session) return user;
       let session = await auth.exchange_access_token(this.client, user.access_token, hwid);
       return Tarkov(this.client, hwid.toString(), session.session);
     } catch (err) {

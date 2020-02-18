@@ -148,7 +148,7 @@ class Auth {
     let url = `https://${LAUNCHER_ENDPOINT}/launcher/hardwareCode/activate?launcherVersion=${LAUNCHER_VERSION}`;
     let body =  {
       email: email,
-      device_id: hwid,
+      hwCode: hwid,
       activateCode: code,
     };
     let res = await this.post_json(client, url, body);
@@ -163,8 +163,7 @@ class Auth {
         type: 'post',
         headers: {
           'Content-Type': 'application/json',
-          'User-Agent': `BSG Launcher ${LAUNCHER_VERSION}`,
-          'Host': LAUNCHER_ENDPOINT
+          'User-Agent': `BSG Launcher ${LAUNCHER_VERSION}`
         },
         gzip: true,
         encoding: null,
@@ -173,7 +172,7 @@ class Auth {
       });
       return response;
     } catch (err) {
-      console.log('[POST_JSON]',new Date(), err.message);
+      console.log('[POST_JSON]', new Date(), err.message);
     }
   }
 
@@ -187,7 +186,7 @@ function handle_auth_error(obj) {
       //case 0: return obj;
       case 201: return 'Not Authorized';
       case 207: return 'Missing parameters';
-      case 209: return 'TwoFactorRequired! Received new hardware code. Check email for 2FA code.';
+      case 209: return 'TwoFactorRequired';
       case 211: return 'BadTwoFactorCode';
       case 214: return 'CaptchaRequired';
       default: return `Unknown API Error: ${obj.err}`;
@@ -224,10 +223,9 @@ class LoginResponse {
    * @param {Error} obj.error response error
    * @param {Object} obj.data response data 
    */
-  constructor({err, data, errmsg}) {
+  constructor({err, data}) {
     this.err = err;
     this.data = data;
-    this.errmsg = errmsg
   }
   toJSON() {
     return Object.getOwnPropertyNames(this).reduce((a, b) => {
