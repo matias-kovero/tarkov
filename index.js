@@ -79,7 +79,6 @@ function Tarkov(client=request, hwid, session) {
   Tarkov.prototype.login = async function(email, password, hwid) {
     try {
       let user = await auth.login(this.client, email, password, null, hwid);
-      if(!user.access_token) return user;
       let session = await auth.exchange_access_token(this.client, user.access_token, hwid);
       return Tarkov(this.client, hwid.toString(), session.session);
     } catch (err) {
@@ -122,7 +121,7 @@ function Tarkov(client=request, hwid, session) {
   Tarkov.prototype.login_with_2fa = async function(email, password, code, hwid) {
     try {
       if(!email || !password || !code || !hwid) throw new Error('Invalid parameters');
-      await auth.activate_hardware(this.client, email, password, code, hwid);
+      await auth.activate_hardware(this.client, email, code, hwid);
       let user = await auth.login(this.client, email, password, null, hwid);
       let session = await auth.exchange_access_token(this.client, user.access_token, hwid);
       return Tarkov(this.client, hwid.toString(), session.session);
@@ -543,7 +542,7 @@ function Tarkov(client=request, hwid, session) {
    * @private
    */
   
-  Tarkov.prototype.post_json =  async function(url, data) {
+  Tarkov.prototype.post_json = async function(url, data) {
     try {
       let response = await this.client({
         url: url,
@@ -552,13 +551,15 @@ function Tarkov(client=request, hwid, session) {
           'User-Agent': `UnityPlayer/${UNITY_VERSION} (UnityWebRequest/1.0, libcurl/7.52.0-DEV)`,
           'App-Version': `EFT Client ${GAME_VERSION}`,
           'X-Unity-Version': UNITY_VERSION,
-          'Cookie': `PHPSESSID=${this.session}`
+          'Cookie': `PHPSESSID=${this.session}`,
+          'GClient-RequestId': 	REQUEST_ID,
         },
         gzip: true,
         encoding: null,
         json: data,
         transform: body => JSON.parse(pako.inflate(body, {to: 'string' })) 
       });
+      REQUEST_ID += 1; // Add on for our request.
       return response;
     } catch (err) {
       console.log('ERROR', err);
