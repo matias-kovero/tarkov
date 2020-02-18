@@ -551,15 +551,13 @@ function Tarkov(client=request, hwid, session) {
           'User-Agent': `UnityPlayer/${UNITY_VERSION} (UnityWebRequest/1.0, libcurl/7.52.0-DEV)`,
           'App-Version': `EFT Client ${GAME_VERSION}`,
           'X-Unity-Version': UNITY_VERSION,
-          'Cookie': `PHPSESSID=${this.session}`,
-          'GClient-RequestId': 	REQUEST_ID,
+          'Cookie': `PHPSESSID=${this.session}`
         },
         gzip: true,
         encoding: null,
         json: data,
         transform: body => JSON.parse(pako.inflate(body, {to: 'string' })) 
       });
-      REQUEST_ID += 1; // Add on for our request.
       return response;
     } catch (err) {
       console.log('ERROR', err);
