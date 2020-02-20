@@ -130,7 +130,7 @@ export class Tarkov {
       const result: ApiResponse = await this.api.prod.post('launcher/game/start', {
         searchParams: {
           launcherVersion: this.launcherVersion,
-          branch: 'alive',
+          branch: 'live',
         },
         headers: {
           Host: 'prod.escapefromtarkov.com',
