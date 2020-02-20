@@ -26,12 +26,14 @@ export class Api {
     hooks: {
       beforeRequest: [
         (options: NormalOptions) => {
-          // redefine out user-agent for this request
-          options.bsgAgent ? options.headers['user-agent'] = `BSG Launcher ${this.launcherVersion}` : null;
-          options.unityAgent ? options.headers['user-agent'] = `UnityPlayer/${this.unityVersion} (UnityWebRequest/1.0, libcurl/7.52.0-DEV)` : null;
-          options.unityAgent ? options.headers['x-unity-version'] = this.unityVersion : null;
-          options.appVersion ? options.headers['app-version'] = `EFT Client ${this.gameVersion}` : null;
-          options.requestId ? options.headers['gclient-requestid'] = `${this.request++}` : null;
+          delete options.headers['user-agent'];
+          delete options.headers['content-type'];
+          options.headers['Content-Type'] = 'application/json';
+          options.bsgAgent ? options.headers['User-Agent'] = `BSG Launcher ${this.launcherVersion}` : null;
+          options.unityAgent ? options.headers['User-Agent'] = `UnityPlayer/${this.unityVersion} (UnityWebRequest/1.0, libcurl/7.52.0-DEV)` : null;
+          options.unityAgent ? options.headers['X-Unity-Version'] = this.unityVersion : null;
+          options.appVersion ? options.headers['App-Version'] = `EFT Client ${this.gameVersion}` : null;
+          options.requestId ? options.headers['GClient-RequestId'] = `${this.request++}` : null;
         },
       ],
       afterResponse: [
@@ -54,9 +56,6 @@ export class Api {
   constructor() {
     this.prod = got.extend({
       prefixUrl: 'https://prod.escapefromtarkov.com',
-      headers: {
-        'content-type': 'application/json',
-      },
       unityAgent: true,
       appVersion: true,
       requestId: true,
@@ -65,26 +64,17 @@ export class Api {
 
     this.launcher = got.extend({
       prefixUrl: 'https://launcher.escapefromtarkov.com',
-      headers: {
-        'content-type': 'application/json',
-      },
       bsgAgent: true,
       ...this.defaultOptions,
     });
 
     this.trading = got.extend({
       prefixUrl: 'https://trading.escapefromtarkov.com',
-      headers: {
-        'content-type': 'application/json',
-      },
       ...this.defaultOptions,
     });
 
     this.ragfair = got.extend({
       prefixUrl: 'https://ragfair.escapefromtarkov.com',
-      headers: {
-        'content-type': 'application/json',
-      },
       ...this.defaultOptions,
     });
 

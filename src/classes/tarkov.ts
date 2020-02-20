@@ -99,7 +99,7 @@ export class Tarkov {
   public async getProfiles(): Promise<Profile[]> {
     const result: ApiResponse<Profile[]> = await this.api.prod.post('client/game/profile/list', {
       headers: {
-        cookie: `PHPSESSID=${this.session.session}`,
+        'Cookie': `PHPSESSID=${this.session.session}`,
       },
     });
 
