@@ -72,6 +72,10 @@ export class Api {
 
     this.trading = got.extend({
       prefixUrl: 'https://trading.escapefromtarkov.com',
+      unityAgent: true,
+      appVersion: true,
+      requestId: true,
+      bsgSession: true,
       ...this.defaultOptions,
     });
 

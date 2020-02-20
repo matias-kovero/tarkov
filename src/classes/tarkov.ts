@@ -4,6 +4,8 @@ import * as crypto from 'crypto';
 import { Profile } from "../types/profile";
 import { ApiResponse } from "../types/api";
 import { Hwid, SelectedProfile } from "../types/tarkov";
+import { Localization } from "../types/i18n";
+import { Trader } from "../types/traders";
 
 /** Tarkov API Wrapper */
 export class Tarkov {
@@ -11,6 +13,7 @@ export class Tarkov {
   private api: Api; // Our HTTP Client for making requests
   profiles: Profile[] = [];
   profile!: Profile;
+  localization!: Localization;
 
   constructor(hwid?: Hwid) {
     // Use the provided hwid or generate one
@@ -113,6 +116,24 @@ export class Tarkov {
       body,
     });
 
+    return result.body.data;
+  }
+
+  /**
+   * Get all traders
+   */
+  public async getTraders(): Promise<Trader[]> {
+    const result: ApiResponse<Trader[]> = await this.api.trading.post('client/trading/api/getTradersList');
+    return result.body.data;
+  }
+
+  /**
+   * get localization table
+   * @param {string} language
+   */
+  public async getI18n(language: string): Promise<Localization> {
+    const result: ApiResponse<Localization> = await this.api.prod.post(`client/locale/${language}`);
+    this.localization = result.body.data;
     return result.body.data;
   }
 
