@@ -9,6 +9,11 @@ interface NormalOptions extends NormalizedOptions {
   bsgAgent?: boolean;
 }
 
+export interface ApiError {
+  err: number;
+  errmsg: string;
+}
+
 export class Api {
   
   public prod: Got;
@@ -37,10 +42,16 @@ export class Api {
       ],
       afterResponse: [
         (response: any, retry: any) => {
-          return {
+          response = {
             ...response,
             body: JSON.parse(pako.inflate(response.body, { to: 'string' })),
-          } as any;
+          };
+
+          if (response.body.err !== 0) {
+            throw response.body;
+          };
+
+          return response;
         }
       ]
     }
