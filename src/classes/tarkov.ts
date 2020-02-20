@@ -3,13 +3,14 @@ import * as crypto from 'crypto';
 
 import { Profile } from "../types/profile";
 import { ApiResponse } from "../types/api";
-import { Hwid } from "../types/tarkov";
+import { Hwid, SelectedProfile } from "../types/tarkov";
 
 /** Tarkov API Wrapper */
 export class Tarkov {
   private hwid: Hwid; // Users HWID
   private api: Api; // Our HTTP Client for making requests
   profiles: Profile[] = [];
+  profile!: Profile;
 
   constructor(hwid?: Hwid) {
     // Use the provided hwid or generate one
@@ -97,15 +98,22 @@ export class Tarkov {
    * Get an array of profiles
    */
   public async getProfiles(): Promise<Profile[]> {
-    const result: ApiResponse<Profile[]> = await this.api.prod.post('client/game/profile/list', {
-      headers: {
-        'Cookie': `PHPSESSID=${this.session.session}`,
-      },
+    const result: ApiResponse<Profile[]> = await this.api.prod.post('client/game/profile/list');
+    this.profiles = result.body.data;
+    return this.profiles;
+  }
+
+  /**
+   * Select a profile
+   * @param {string} profileId
+   */
+  public async selectProfile(profileId: string): Promise<SelectedProfile> {
+    const body = JSON.stringify({ uid: profileId });
+    const result: ApiResponse<SelectedProfile> = await this.api.prod.post('client/game/profile/select', {
+      body,
     });
 
-    this.profiles = result.body.data;
-
-    return this.profiles;
+    return result.body.data;
   }
 
   /*
@@ -140,6 +148,7 @@ export class Tarkov {
         unityAgent: false,
         appVersion: false,
         requestId: false,
+        bsgSession: false,
       } as any);
 
       if (result.body.err === 0) {

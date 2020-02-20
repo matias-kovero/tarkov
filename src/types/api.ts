@@ -6,6 +6,7 @@ export interface ExtendOptions extends Options {
   unityAgent?: boolean;
   appVersion?: boolean;
   requestId?: boolean;
+  bsgSession?: boolean;
 }
 
 export interface NormalOptions extends NormalizedOptions {
@@ -13,6 +14,7 @@ export interface NormalOptions extends NormalizedOptions {
   unityAgent?: boolean;
   appVersion?: boolean;
   requestId?: boolean;
+  bsgSession?: boolean;
 }
 
 export interface ApiResponse<Data = any> extends Response {

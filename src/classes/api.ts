@@ -29,6 +29,7 @@ export class Api {
           delete options.headers['user-agent'];
           delete options.headers['content-type'];
           options.headers['Content-Type'] = 'application/json';
+          options.bsgSession ? options.headers['Cookie'] = `PHPSESSID=${this.session.session}` : null;
           options.bsgAgent ? options.headers['User-Agent'] = `BSG Launcher ${this.launcherVersion}` : null;
           options.unityAgent ? options.headers['User-Agent'] = `UnityPlayer/${this.unityVersion} (UnityWebRequest/1.0, libcurl/7.52.0-DEV)` : null;
           options.unityAgent ? options.headers['X-Unity-Version'] = this.unityVersion : null;
@@ -59,6 +60,7 @@ export class Api {
       unityAgent: true,
       appVersion: true,
       requestId: true,
+      bsgSession: true,
       ...this.defaultOptions,
     });
 
