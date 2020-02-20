@@ -48,9 +48,18 @@ export class Tarkov {
    * Login to tarkov
    * @param {string} email Your Tarkov account email
    * @param {string} password Your Tarkov account password
+   * @param {string} [twoFactor] 2FA Code sent to your account email
    */
-  public login(email: string, password: string) {
+  public async login(email: string, password: string, twoFactor?: string) {
     const hash = crypto.createHash('md5').update(password).digest('hex');
+
+    if (twoFactor !== undefined) {
+      try {
+        await this.activateHardware(email, twoFactor);
+      } catch ({ err, errmsg }) {
+        return console.error(`[API Error] ${errmsg}`);
+      }
+    }
 
     const body = JSON.stringify({
       email,
@@ -66,11 +75,11 @@ export class Tarkov {
       },
       body,
     }).then((result: any) => {
-      if (result.statusCode === 200) {
-        this.exchangeAccessToken(result.body.data.access_token);
-      } else {
-        throw `Invalid status code ${result.statusCode}`;
+      if (result.body.err === 0) {
+        return this.exchangeAccessToken(result.body.data.access_token);
       }
+
+      return console.error(`[API Error] ${result.body.errmsg}`);
     }, error => {
       throw error;
     });
@@ -82,7 +91,7 @@ export class Tarkov {
 
   /**
    * Exchanges the access token for a session id
-   * @param {string} access_token JWT from @see login
+   * @param {string} access_token JWT from @login
    */
   private exchangeAccessToken(access_token: string) {
     const body = JSON.stringify({
@@ -113,6 +122,26 @@ export class Tarkov {
       }
     }, error => {
       throw error;
+    });
+  }
+
+  /**
+   * Activates a new HWID with a 2fa code
+   * @param {string} email Account Email
+   * @param {string} twoFactor 2FA Code from email
+   */
+  private async activateHardware(email: string, twoFactor: string) {
+    const body = JSON.stringify({
+      email,
+      hwCode: this.hwid,
+      activateCode: twoFactor,
+    });
+
+    await this.api.launcher.post('launcher/hardwareCode/activate', {
+      searchParams: {
+        launcherVersion: this.launcherVersion,
+      },
+      body,
     });
   }
 
