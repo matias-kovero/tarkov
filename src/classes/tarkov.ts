@@ -1,11 +1,15 @@
-import { Hwid } from "./tarkov.interface";
 import { Api } from "./api";
 import * as crypto from 'crypto';
+
+import { Profile } from "../types/profile";
+import { ApiResponse } from "../types/api";
+import { Hwid } from "../types/tarkov";
 
 /** Tarkov API Wrapper */
 export class Tarkov {
   private hwid: Hwid; // Users HWID
   private api: Api; // Our HTTP Client for making requests
+  profiles: Profile[] = [];
 
   constructor(hwid?: Hwid) {
     // Use the provided hwid or generate one
@@ -68,21 +72,40 @@ export class Tarkov {
       captcha: null, 
     });
 
-    this.api.launcher.post('launcher/login', {
-      searchParams: {
-        launcherVersion: this.launcherVersion,
-        branch: 'live',
-      },
-      body,
-    }).then((result: any) => {
+    try {
+      const result: ApiResponse = await this.api.launcher.post('launcher/login', {
+        searchParams: {
+          launcherVersion: this.launcherVersion,
+          branch: 'live',
+        },
+        body,
+      });
+
       if (result.body.err === 0) {
-        return this.exchangeAccessToken(result.body.data.access_token);
+        await this.exchangeAccessToken(result.body.data.access_token);
+        return;
       }
 
-      return console.error(`[API Error] ${result.body.errmsg}`);
-    }, error => {
-      throw error;
+      console.error(`[API Error] ${result.body.errmsg}`);
+      return result.body;
+    } catch (error) {
+      console.log('[Login] ', error);
+    }
+  }
+
+  /**
+   * Get an array of profiles
+   */
+  public async getProfiles(): Promise<Profile[]> {
+    const result: ApiResponse<Profile[]> = await this.api.prod.post('client/game/profile/list', {
+      headers: {
+        cookie: `PHPSESSID=${this.session.session}`,
+      },
     });
+
+    this.profiles = result.body.data;
+
+    return this.profiles;
   }
 
   /*
@@ -93,7 +116,7 @@ export class Tarkov {
    * Exchanges the access token for a session id
    * @param {string} access_token JWT from @login
    */
-  private exchangeAccessToken(access_token: string) {
+  private async exchangeAccessToken(access_token: string) {
     const body = JSON.stringify({
       version: {
         major: this.gameVersion,
@@ -103,26 +126,32 @@ export class Tarkov {
       hwCode: this.hwid,
     });
 
-    this.api.prod.post('launcher/game/start', {
-      searchParams: {
-        launcherVersion: this.launcherVersion,
-        branch: 'alive',
-      },
-      headers: {
-        Host: 'prod.escapefromtarkov.com',
-        'Authorization': access_token,
-      },
-      body,
-    }).then((result: any) => {
-      if (result.statusCode === 200) {
+    try {
+      const result: ApiResponse = await this.api.prod.post('launcher/game/start', {
+        searchParams: {
+          launcherVersion: this.launcherVersion,
+          branch: 'live',
+        },
+        headers: {
+          Host: 'prod.escapefromtarkov.com',
+          'Authorization': access_token,
+        },
+        body,
+        unityAgent: false,
+        appVersion: false,
+        requestId: false,
+      } as any);
+
+      if (result.body.err === 0) {
         this.session = result.body.data;
         console.log('New session started!', this.session);
-      } else {
-        throw `Invalid status code ${result.statusCode}`;
+        return true;
       }
-    }, error => {
+      
+      throw `Invalid status code ${result.body.err}`;
+    } catch (error) {
       throw error;
-    });
+    }
   }
 
   /**
@@ -137,12 +166,17 @@ export class Tarkov {
       activateCode: twoFactor,
     });
 
-    await this.api.launcher.post('launcher/hardwareCode/activate', {
-      searchParams: {
-        launcherVersion: this.launcherVersion,
-      },
-      body,
-    });
+    try {
+      await this.api.launcher.post('launcher/hardwareCode/activate', {
+        searchParams: {
+          launcherVersion: this.launcherVersion,
+        },
+        body,
+      });
+    } catch (error) {
+      console.log(`Activate Hardware Failed`);
+      throw error;
+    }
   }
 
   // TODO: move this to a HWID class

@@ -1,28 +1,18 @@
-import got, { Got, NormalizedOptions, Options } from 'got';
+import got, { Got } from 'got';
 import pako = require('pako');
-
-interface ExtendOptions extends Options {
-  bsgAgent?: boolean;
-}
-
-interface NormalOptions extends NormalizedOptions {
-  bsgAgent?: boolean;
-}
-
-export interface ApiError {
-  err: number;
-  errmsg: string;
-}
+import { ExtendOptions, NormalOptions } from '../types/api';
 
 export class Api {
-  
   public prod: Got;
   public launcher: Got;
   public trading: Got;
   public ragfair: Got;
 
   public launcherVersion = '0.9.3.1023';
-  public gameVersion = '0.12.3.5961';
+  public gameVersion = '0.12.3.5985';
+  public unityVersion = '2018.4.13f1';
+
+  private request = 0;
 
   public session = {
     queued: false,
@@ -38,6 +28,10 @@ export class Api {
         (options: NormalOptions) => {
           // redefine out user-agent for this request
           options.bsgAgent ? options.headers['user-agent'] = `BSG Launcher ${this.launcherVersion}` : null;
+          options.unityAgent ? options.headers['user-agent'] = `UnityPlayer/${this.unityVersion} (UnityWebRequest/1.0, libcurl/7.52.0-DEV)` : null;
+          options.unityAgent ? options.headers['x-unity-version'] = this.unityVersion : null;
+          options.appVersion ? options.headers['app-version'] = `EFT Client ${this.gameVersion}` : null;
+          options.requestId ? options.headers['gclient-requestid'] = `${this.request++}` : null;
         },
       ],
       afterResponse: [
@@ -63,6 +57,9 @@ export class Api {
       headers: {
         'content-type': 'application/json',
       },
+      unityAgent: true,
+      appVersion: true,
+      requestId: true,
       ...this.defaultOptions,
     });
 
