@@ -3,6 +3,8 @@
 A js library for the [Escape from Tarkov](https://escapefromtarkov.com) API.  
 This library is currently in alpha. Everything may change significantly in future releases.  
 
+Note: This requires node v8.9.0+
+
 View [Documentation](https://matias-kovero.github.io/tarkov/)
 ## Features
 - [x] Authentication
@@ -10,10 +12,11 @@ View [Documentation](https://matias-kovero.github.io/tarkov/)
 - [x] Traders
 - [ ] Hideout
 - [x] Inventory management(_*_)  
-- [ ] Messenger
+- [x] Messenger(_**_)
 - [ ] Quests
 
-_* Move & Stack are implemented_
+_* Move & Stack are implemented_  
+_** Ragfair, System & Quests_
 ## Install
 ```
 npm i tarkov
