@@ -1,0 +1,2 @@
+
+export type Hwid = string;

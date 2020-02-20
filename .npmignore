@@ -3,3 +3,4 @@ CONTRIBUTING
 package-lock.json
 docs
 jsdoc.json
+tsconfig.json
