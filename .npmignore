@@ -2,5 +2,8 @@ node_modules
 CONTRIBUTING
 package-lock.json
 docs
+src
+lib-old
+testing.ts
 jsdoc.json
 tsconfig.json
