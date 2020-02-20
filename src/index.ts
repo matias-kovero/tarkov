@@ -1,2 +1,2 @@
 
-export * from './tarkov';
+export * from './classes/tarkov';
