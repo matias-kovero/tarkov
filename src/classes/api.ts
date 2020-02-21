@@ -29,6 +29,7 @@ export class Api {
           delete options.headers['user-agent'];
           delete options.headers['content-type'];
           options.headers['Content-Type'] = 'application/json';
+          options.bsgSession ? options.headers['Cookie'] = `PHPSESSID=${this.session.session}` : null;
           options.bsgAgent ? options.headers['User-Agent'] = `BSG Launcher ${this.launcherVersion}` : null;
           options.unityAgent ? options.headers['User-Agent'] = `UnityPlayer/${this.unityVersion} (UnityWebRequest/1.0, libcurl/7.52.0-DEV)` : null;
           options.unityAgent ? options.headers['X-Unity-Version'] = this.unityVersion : null;
@@ -50,21 +51,26 @@ export class Api {
           return response;
         }
       ]
-    }
+    },
+    unityAgent: true,
+    appVersion: true,
+    requestId: true,
+    bsgSession: true,
   };
 
   constructor() {
     this.prod = got.extend({
       prefixUrl: 'https://prod.escapefromtarkov.com',
-      unityAgent: true,
-      appVersion: true,
-      requestId: true,
       ...this.defaultOptions,
     });
 
     this.launcher = got.extend({
       prefixUrl: 'https://launcher.escapefromtarkov.com',
       bsgAgent: true,
+      unityAgent: false,
+      appVersion: false,
+      requestId: false,
+      bsgSession: false,
       ...this.defaultOptions,
     });
 
