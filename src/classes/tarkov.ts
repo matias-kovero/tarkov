@@ -3,9 +3,16 @@ import * as crypto from 'crypto';
 
 import { Profile } from "../types/profile";
 import { ApiResponse } from "../types/api";
-import { Hwid, SelectedProfile } from "../types/tarkov";
+import { Hwid, SelectedProfile, MarketFilter } from "../types/tarkov";
 import { Localization } from "../types/i18n";
 import { Trader } from "../types/traders";
+import { ItemsList } from "../types/item";
+import { Weather } from "../types/weather";
+import { Messages } from "../types/messages";
+import { MessageAttachements } from "../types/MessageAttachements";
+import { MarketOffers } from "../types/market";
+
+const fs = require('fs');
 
 /** Tarkov API Wrapper */
 export class Tarkov {
@@ -14,6 +21,7 @@ export class Tarkov {
   profiles: Profile[] = [];
   profile!: Profile;
   localization!: Localization;
+  itemsList!: ItemsList;
 
   constructor(hwid?: Hwid) {
     // Use the provided hwid or generate one
@@ -128,8 +136,112 @@ export class Tarkov {
   }
 
   /**
+   * Get a trader by id
+   * @param {string} id The traders ID
+   */
+  public async getTrader(id: string): Promise<Trader> {
+    const result: ApiResponse<Trader> = await this.api.trading.post(`client/trading/api/getTrader/${id}`);
+    return result.body.data;
+  }
+
+  /**
+   * Get all messages
+   * @param {number} [type] The type of message to filter by - OPTIONAL
+   */
+  public async getMessages(type?: number): Promise<Messages[]> {
+    const result: ApiResponse<Messages[]> = await this.api.prod.post('client/mail/dialog/list');
+
+    // Optionally filter by type
+    if (type) {
+      return result.body.data.filter((dialog: Messages) => dialog.type === type);
+    }
+
+    return result.body.data;
+  }
+
+  /**
+   * Get message attachements
+   * @param {string} id Message ID to get attachements for
+   */
+  public async getMessageAttachements(id?: string): Promise<MessageAttachements> {
+    const body = JSON.stringify({ dialogId: id });
+    const result: ApiResponse<MessageAttachements> = await this.api.prod.post('client/mail/dialog/getAllAttachments', { body });
+    return result.body.data;
+  }
+
+  /**
+   * Get all items
+   */
+  public async getItems(): Promise<ItemsList> {
+    const body = JSON.stringify({crc : 0});
+    const result: ApiResponse<ItemsList> = await this.api.prod.post('client/items', { body });
+    this.itemsList = result.body.data;
+    return result.body.data;
+  }
+
+  /**
+   * Search offers from Flea Market.
+   * @async
+   * @param {Number} page - starting page, example: start searching from page 0.
+   * @param {Number} limit - limit how many results to show. Example: 15.
+   * @param {MarketFilter} filter - Market Filter
+   * @param {Number} [filter.sortType=5] - ID = 0, Barter = 2, Mechant Rating = 3, Price = 5, Expiry = 6
+   * @param {Number} [filter.sortDirection=0] - Ascending = 0, Descending = 1
+   * @param {Number} [filter.currency=0] - All = 0, RUB = 1, USD = 2, EUR = 3
+   * @param {Number} [filter.priceFrom=0] - Won't show offers below this number
+   * @param {Number} [filter.priceTo=0] - Won't show offers higher than this number
+   * @param {Number} [filter.quantityFrom=0] - Minimum items in the stack
+   * @param {Number} [filter.quantityTo=0] - Max number of items in the stack
+   * @param {Number} [filter.conditionFrom=0] - Won't show offers where item won't match minium condition
+   * @param {Number} [filter.conditionTo=100] - Won't show offers where item won't match maxium condition
+   * @param {Boolean} [filter.oneHourExpiration=false] - Show items that are expiring within hour
+   * @param {Boolean} [filter.removeBartering=true] - Should we hide bartering offers
+   * @param {Number} [filter.offerOwnerType=0] - Any owner = 0, Listed by traders = 1, Listed by players = 2
+   * @param {Boolean} [filter.onlyFunctional=true] - Hide weapons that are inoperable
+   * @param {String} [filter.handbookId=""] - item id you are searching
+   * @param {String} [filter.linkedSearchId=""] - if you are performing linked item search, include item id
+   * @param {String} [filter.neededSearchId=""] - if you are performing required item search, include item id
+   */
+  public async searchMarket(page: number, limit: number, filter: MarketFilter): Promise<MarketOffers> {
+    const body = JSON.stringify({
+      page: page,
+      limit: limit,
+      sortType: 5,
+      sortDirection: 0,
+      currency: 0,
+      priceFrom: 0,
+      priceTo: 0,
+      quantityFrom: 0,
+      quantityTo: 0,
+      conditionFrom: 0,
+      conditionTo: 100,
+      oneHourExpiration: false,
+      removeBartering: true,
+      offerOwnerType: 0,
+      onlyFunctional: true,
+      updateOfferCount: true,
+      handbookId: '',
+      linkedSearchId: '',
+      neededSearchId: '',
+      tm: 1,
+      ...filter,
+    });
+    
+    const result: ApiResponse<MarketOffers> = await this.api.ragfair.post('client/ragfair/find', { body });
+    return result.body.data;
+  }
+
+  /**
+   * Get weather
+   */
+  public async getWeather(): Promise<Weather> {
+    const result: ApiResponse<Weather> = await this.api.prod.post('client/weather');
+    return result.body.data;
+  }
+
+  /**
    * get localization table
-   * @param {string} language
+   * @param {string} language language code, example: English = en
    */
   public async getI18n(language: string): Promise<Localization> {
     const result: ApiResponse<Localization> = await this.api.prod.post(`client/locale/${language}`);

@@ -51,31 +51,31 @@ export class Api {
           return response;
         }
       ]
-    }
+    },
+    unityAgent: true,
+    appVersion: true,
+    requestId: true,
+    bsgSession: true,
   };
 
   constructor() {
     this.prod = got.extend({
       prefixUrl: 'https://prod.escapefromtarkov.com',
-      unityAgent: true,
-      appVersion: true,
-      requestId: true,
-      bsgSession: true,
       ...this.defaultOptions,
     });
 
     this.launcher = got.extend({
       prefixUrl: 'https://launcher.escapefromtarkov.com',
       bsgAgent: true,
+      unityAgent: false,
+      appVersion: false,
+      requestId: false,
+      bsgSession: false,
       ...this.defaultOptions,
     });
 
     this.trading = got.extend({
       prefixUrl: 'https://trading.escapefromtarkov.com',
-      unityAgent: true,
-      appVersion: true,
-      requestId: true,
-      bsgSession: true,
       ...this.defaultOptions,
     });
 
