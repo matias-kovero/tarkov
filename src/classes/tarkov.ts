@@ -168,7 +168,7 @@ export class Tarkov {
    * @async
    * @param {string} id Message ID to get attachements for
    */
-  public async getMessageAttachements(id?: string): Promise<MessageAttachements> {
+  public async getMessageAttachments(id?: string): Promise<MessageAttachements> {
     const body = JSON.stringify({ dialogId: id });
     const result: ApiResponse<MessageAttachements> = await this.api.prod.post('client/mail/dialog/getAllAttachments', { body });
     return result.body.data;
@@ -179,7 +179,7 @@ export class Tarkov {
    * @async
    */
   public async getItems(): Promise<ItemsList> {
-    const body = JSON.stringify({crc : 0});
+    const body = JSON.stringify({ crc : 0 });
     const result: ApiResponse<ItemsList> = await this.api.prod.post('client/items', { body });
     this.itemsList = result.body.data;
     return result.body.data;
