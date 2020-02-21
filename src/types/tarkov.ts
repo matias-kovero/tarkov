@@ -30,3 +30,8 @@ export interface MarketFilter {
   linkedSearchId?: string;
   neededSearchId?: string;
 }
+
+export interface BarterItem {
+  id: string;
+  count: number;
+}

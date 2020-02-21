@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 
 import { Profile } from "../types/profile";
 import { ApiResponse } from "../types/api";
-import { Hwid, SelectedProfile, MarketFilter } from "../types/tarkov";
+import { Hwid, SelectedProfile, MarketFilter, BarterItem } from "../types/tarkov";
 import { Localization } from "../types/i18n";
 import { Trader } from "../types/traders";
 import { ItemsList } from "../types/item";
@@ -62,6 +62,7 @@ export class Tarkov {
 
   /**
    * Login to tarkov
+   * @async
    * @param {string} email Your Tarkov account email
    * @param {string} password Your Tarkov account password
    * @param {string} [twoFactor] 2FA Code sent to your account email
@@ -107,6 +108,7 @@ export class Tarkov {
 
   /**
    * Get an array of profiles
+   * @async
    */
   public async getProfiles(): Promise<Profile[]> {
     const result: ApiResponse<Profile[]> = await this.api.prod.post('client/game/profile/list');
@@ -116,6 +118,7 @@ export class Tarkov {
 
   /**
    * Select a profile
+   * @async
    * @param {string} profileId
    */
   public async selectProfile(profileId: string): Promise<SelectedProfile> {
@@ -129,6 +132,7 @@ export class Tarkov {
 
   /**
    * Get all traders
+   * @async
    */
   public async getTraders(): Promise<Trader[]> {
     const result: ApiResponse<Trader[]> = await this.api.trading.post('client/trading/api/getTradersList');
@@ -137,6 +141,7 @@ export class Tarkov {
 
   /**
    * Get a trader by id
+   * @async
    * @param {string} id The traders ID
    */
   public async getTrader(id: string): Promise<Trader> {
@@ -146,6 +151,7 @@ export class Tarkov {
 
   /**
    * Get all messages
+   * @async
    * @param {number} [type] The type of message to filter by - OPTIONAL
    */
   public async getMessages(type?: number): Promise<Messages[]> {
@@ -161,6 +167,7 @@ export class Tarkov {
 
   /**
    * Get message attachements
+   * @async
    * @param {string} id Message ID to get attachements for
    */
   public async getMessageAttachements(id?: string): Promise<MessageAttachements> {
@@ -171,11 +178,32 @@ export class Tarkov {
 
   /**
    * Get all items
+   * @async
    */
   public async getItems(): Promise<ItemsList> {
     const body = JSON.stringify({crc : 0});
     const result: ApiResponse<ItemsList> = await this.api.prod.post('client/items', { body });
     this.itemsList = result.body.data;
+    return result.body.data;
+  }
+
+  /**
+   * Get weather
+   * @async
+   */
+  public async getWeather(): Promise<Weather> {
+    const result: ApiResponse<Weather> = await this.api.prod.post('client/weather');
+    return result.body.data;
+  }
+
+  /**
+   * get localization table
+   * @async
+   * @param {string} language language code, example: English = en
+   */
+  public async getI18n(language: string): Promise<Localization> {
+    const result: ApiResponse<Localization> = await this.api.prod.post(`client/locale/${language}`);
+    this.localization = result.body.data;
     return result.body.data;
   }
 
@@ -232,20 +260,25 @@ export class Tarkov {
   }
 
   /**
-   * Get weather
+   * Buy an item
+   * @async
+   * @param {string} id - offer id
+   * @param {number} count - amount of items to buy
+   * @param {BarterItem[]} barterItems - array of items to fulfill the offer
    */
-  public async getWeather(): Promise<Weather> {
-    const result: ApiResponse<Weather> = await this.api.prod.post('client/weather');
-    return result.body.data;
-  }
-
-  /**
-   * get localization table
-   * @param {string} language language code, example: English = en
-   */
-  public async getI18n(language: string): Promise<Localization> {
-    const result: ApiResponse<Localization> = await this.api.prod.post(`client/locale/${language}`);
-    this.localization = result.body.data;
+  public async buyItem(id: string, count: number, barterItems: BarterItem[]): Promise<any> {
+    const body = JSON.stringify({
+      data: [{
+        Action: 'RagFairBuyOffer',
+        offers: [{
+          id,
+          count,
+          items: barterItems,
+        }],
+      }],
+      tm: 2,
+    });
+    const result: ApiResponse<any> = await this.api.prod.post('client/game/profile/items/moving', { body });
     return result.body.data;
   }
 
