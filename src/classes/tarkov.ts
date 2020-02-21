@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 
 import { Profile } from "../types/profile";
 import { ApiResponse } from "../types/api";
-import { Hwid, SelectedProfile, MarketFilter, BarterItem } from "../types/tarkov";
+import { Hwid, SelectedProfile, MarketFilter, BarterItem, ItemForSale } from "../types/tarkov";
 import { Localization } from "../types/i18n";
 import { Trader } from "../types/traders";
 import { ItemsList } from "../types/item";
@@ -11,8 +11,6 @@ import { Weather } from "../types/weather";
 import { Messages } from "../types/messages";
 import { MessageAttachements } from "../types/MessageAttachements";
 import { MarketOffers } from "../types/market";
-
-const fs = require('fs');
 
 /** Tarkov API Wrapper */
 export class Tarkov {
@@ -197,6 +195,15 @@ export class Tarkov {
   }
 
   /**
+   * Keep Alive
+   * @async
+   */
+  public async keepAlive(): Promise<any> {
+    const result: ApiResponse<any> = await this.api.prod.post('client/game/keepalive');
+    return result.body.data;
+  }
+
+  /**
    * get localization table
    * @async
    * @param {string} language language code, example: English = en
@@ -261,6 +268,7 @@ export class Tarkov {
 
   /**
    * Buy an item
+   * UNTESTED
    * @async
    * @param {string} id - offer id
    * @param {number} count - amount of items to buy
@@ -277,6 +285,27 @@ export class Tarkov {
         }],
       }],
       tm: 2,
+    });
+    const result: ApiResponse<any> = await this.api.prod.post('client/game/profile/items/moving', { body });
+    return result.body.data;
+  }
+
+  /**
+   * Sell an item
+   * UNTESTED
+   * @async
+   * @param {string} traderId - trader id
+   * @param {ItemForSale[]} items - Array of items to sell
+   */
+  public async sellItem(traderId: string, items: ItemForSale[]): Promise<any> {
+    const body = JSON.stringify({
+      data: [{
+        Action: "TradingConfirm",
+        type: "sell_to_trader",
+        tid: traderId,
+        items: items.map((i: ItemForSale) => ({ ...i, scheme_id: 0 }))
+      }],
+      tm: 0,
     });
     const result: ApiResponse<any> = await this.api.prod.post('client/game/profile/items/moving', { body });
     return result.body.data;

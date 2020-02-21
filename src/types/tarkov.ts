@@ -35,3 +35,8 @@ export interface BarterItem {
   id: string;
   count: number;
 }
+
+export interface ItemForSale {
+  id: string,
+  count: number,
+}
