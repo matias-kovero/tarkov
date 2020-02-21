@@ -40,3 +40,13 @@ export interface ItemForSale {
   id: string,
   count: number,
 }
+
+export interface ItemDestination {
+  id: string;
+  container: 'main' | 'hideout';
+  location?: {
+    x: number;
+    y: number;
+    r: 0 | 1;
+  };
+}

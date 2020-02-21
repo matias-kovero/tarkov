@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 
 import { Profile } from "../types/profile";
 import { ApiResponse } from "../types/api";
-import { Hwid, SelectedProfile, MarketFilter, BarterItem, ItemForSale } from "../types/tarkov";
+import { Hwid, SelectedProfile, MarketFilter, BarterItem, ItemForSale, ItemDestination } from "../types/tarkov";
 import { Localization } from "../types/i18n";
 import { Trader } from "../types/traders";
 import { ItemsList } from "../types/item";
@@ -306,6 +306,110 @@ export class Tarkov {
         items: items.map((i: ItemForSale) => ({ ...i, scheme_id: 0 }))
       }],
       tm: 0,
+    });
+    const result: ApiResponse<any> = await this.api.prod.post('client/game/profile/items/moving', { body });
+    return result.body.data;
+  }
+
+  /**
+   * Offer an item
+   * UNTESTED
+   * @async
+   * @param {array} items Array of item ids
+   * @param {object} requirements id of item to move onto
+   * @param {String} requirement._tpl - Items schema id. Also known _tpl. Ex. Rouble_id
+   * @param {String} requirement.price - On what price you want to sell.
+   * @param {boolean} sellAll - Sell all in one piece. Default false
+   */
+  public async offerItem(items: any[], requirements: any, sellAll = false): Promise<any> {
+    const body = JSON.stringify({
+      data: [{
+        Action: "RagFairAddOffer",
+        sellInOnePiece: sellAll,
+        items: items, // Array of item_ids
+        requirements:[{
+          _tpl: requirements._tpl,
+          count: requirements.price,
+          level: 0,
+          side: 0,
+          onlyFunctional: false,
+        }],
+      tm: 2,
+      }],
+    });
+    const result: ApiResponse<any> = await this.api.prod.post('client/game/profile/items/moving', { body });
+    return result.body.data;
+  }
+
+  /**
+   * Stack an item
+   * UNTESTED
+   * @async
+   * @param {string} fromId id of item to move
+   * @param {string} toId id of item to move onto
+   */
+  public async stackItem(fromId: string, toId: string): Promise<any> {
+    const body = JSON.stringify({
+      data: [{
+        Action: 'Merge',
+        item: fromId,
+        with: toId,
+      }],
+      tm: 2,
+    });
+    const result: ApiResponse<any> = await this.api.prod.post('client/game/profile/items/moving', { body });
+    return result.body.data;
+  }
+
+  /**
+   * Move an item
+   * UNTESTED
+   * @async
+   * @param {string} itemId collect item id
+   * @param {ItemDestination} destination - info where to move. {id, container, location:{x,y,r} }
+   * @param {String} destination.id - item id where we move
+   * @param {String} [destination.container="hideout"] - 'main' = container, 'hideout' = stash
+   * @param {Object} [destination.location={x:0,y:0,r:0}] - {x, y, r} x & y locations, topleft is 0,0. r = 0 or 1.
+   */
+  public async moveItem(itemId: string, destination: ItemDestination): Promise<any> {
+    const body = JSON.stringify({
+      data: [{
+        Action: 'Move',
+        item: itemId,
+        to: {
+          container: 'hideout', // main = container, hideout = stash 
+          location: { x: 0, y: 0, r: 0 }, // try to put to topleft if empty
+          ...destination,
+        },
+      }],
+      tm: 2,
+    });
+    const result: ApiResponse<any> = await this.api.prod.post('client/game/profile/items/moving', { body });
+    return result.body.data;
+  }
+
+  /**
+   * Collect an item
+   * UNTESTED
+   * @async
+   * @param {string} itemId collect item id
+   * @param {string} stashId players stashId. Get it from `profile.inventory.stash`
+   * @param {string} attachmentId attachments id
+   */
+  public async collectItem(itemId: string, stashId: string, attachmentId: string): Promise<any> {
+    const body = JSON.stringify({
+      data: [{
+        Action: 'Move',
+        item: itemId,
+        to:{
+          id: stashId,
+          container: 'hideout',
+        },
+        fromOwner: {
+          id: attachmentId,
+          type: 'Mail'
+        }
+      }]
     });
     const result: ApiResponse<any> = await this.api.prod.post('client/game/profile/items/moving', { body });
     return result.body.data;
