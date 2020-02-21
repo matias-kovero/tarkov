@@ -295,3 +295,9 @@ export interface ProfileData {
   RagfairInfo: RagfairInfo;
   WishList: any[];
 }
+
+export interface ItemSearch {
+  itemId: string;
+  amount: number;
+  stacks: Item[];
+};
