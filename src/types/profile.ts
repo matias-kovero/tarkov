@@ -271,7 +271,7 @@ export interface RagfairInfo {
   offers: any[];
 }
 
-export interface Profile {
+export interface ProfileData {
   _id: string;
   aid: number;
   savage: string;

@@ -1,7 +1,7 @@
 import { Api } from "./api";
 import * as crypto from 'crypto';
 
-import { Profile } from "../types/profile";
+import { ProfileData } from "../types/profile";
 import { ApiResponse } from "../types/api";
 import { Hwid, SelectedProfile, MarketFilter, BarterItem, ItemForSale, ItemDestination } from "../types/tarkov";
 import { Localization } from "../types/i18n";
@@ -11,12 +11,13 @@ import { Weather } from "../types/weather";
 import { Messages } from "../types/messages";
 import { MessageAttachements } from "../types/MessageAttachements";
 import { MarketOffers } from "../types/market";
+import { Profile } from "./profile";
 
 /** Tarkov API Wrapper */
 export class Tarkov {
   private hwid: Hwid; // Users HWID
   private api: Api; // Our HTTP Client for making requests
-  profiles: Profile[] = [];
+  profiles: ProfileData[] = [];
   profile!: Profile;
   localization!: Localization;
   itemsList!: ItemsList;
@@ -108,8 +109,8 @@ export class Tarkov {
    * Get an array of profiles
    * @async
    */
-  public async getProfiles(): Promise<Profile[]> {
-    const result: ApiResponse<Profile[]> = await this.api.prod.post('client/game/profile/list');
+  public async getProfiles(): Promise<ProfileData[]> {
+    const result: ApiResponse<ProfileData[]> = await this.api.prod.post('client/game/profile/list');
     this.profiles = result.body.data;
     return this.profiles;
   }
@@ -119,13 +120,14 @@ export class Tarkov {
    * @async
    * @param {string} profileId
    */
-  public async selectProfile(profileId: string): Promise<SelectedProfile> {
-    const body = JSON.stringify({ uid: profileId });
+  public async selectProfile(profile: ProfileData): Promise<Profile> {
+    const body = JSON.stringify({ uid: profile._id });
     const result: ApiResponse<SelectedProfile> = await this.api.prod.post('client/game/profile/select', {
       body,
     });
-
-    return result.body.data;
+    
+    this.profile = new Profile(profile);
+    return this.profile;
   }
 
   /**
@@ -238,6 +240,8 @@ export class Tarkov {
    * @param {String} [filter.neededSearchId=""] - if you are performing required item search, include item id
    */
   public async searchMarket(page: number, limit: number, filter: MarketFilter): Promise<MarketOffers> {
+    if (!filter.handbookId) throw new Error('handbookId is required');
+
     const body = JSON.stringify({
       page: page,
       limit: limit,
@@ -286,6 +290,7 @@ export class Tarkov {
       }],
       tm: 2,
     });
+
     const result: ApiResponse<any> = await this.api.prod.post('client/game/profile/items/moving', { body });
     return result.body.data;
   }

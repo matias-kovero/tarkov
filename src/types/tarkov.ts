@@ -26,7 +26,7 @@ export interface MarketFilter {
   removeBartering?: boolean;
   offerOwnerType?: number;
   onlyFunctional?: boolean;
-  handbookId?: string;
+  handbookId: string; // Required item id
   linkedSearchId?: string;
   neededSearchId?: string;
 }
