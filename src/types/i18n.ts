@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module Types
+ */
+
 export interface Interface {
   [key: string]: string;
 }

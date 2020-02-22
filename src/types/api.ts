@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module Types
+ */
+
 import { Options, NormalizedOptions, Response } from "got/dist/source";
 
 

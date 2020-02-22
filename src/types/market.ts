@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module Types
+ */
 
 export interface User {
   id: string;

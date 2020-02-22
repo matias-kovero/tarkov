@@ -1,12 +1,10 @@
 {
   "name": "tarkov",
-  "version": "0.1.9",
+  "version": "1.0.0",
   "description": "A client library for Escape from Tarkov API",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "generate-docs": "node_modules/.bin/jsdoc --configure jsdoc.json --verbose README.md",
-    "prepare": "npm run build",
     "build": "tsc",
     "docs": "typedoc --out docs src",
     "dev": "tsnd --respawn testing.ts"
@@ -36,16 +34,14 @@
   "homepage": "https://github.com/matias-kovero/tarkov#readme",
   "dependencies": {
     "got": "^10.5.7",
-    "pako": "^1.0.11",
-    "request": "^2.88.2",
-    "request-promise-native": "^1.0.8"
+    "pako": "^1.0.11"
   },
   "devDependencies": {
     "@types/got": "^9.6.9",
     "@types/pako": "^1.0.1",
-    "clean-jsdoc-theme": "^2.2.10",
     "ts-node-dev": "^1.0.0-pre.44",
     "typedoc": "^0.16.10",
+    "typedoc-plugin-external-module-name": "^3.0.0",
     "typescript": "^3.7.5"
   }
 }

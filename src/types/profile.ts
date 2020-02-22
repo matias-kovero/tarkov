@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module Types
+ */
+
 export interface Settings {
   Role?: string;
   BotDifficulty?: string;
@@ -271,7 +276,7 @@ export interface RagfairInfo {
   offers: any[];
 }
 
-export interface Profile {
+export interface ProfileData {
   _id: string;
   aid: number;
   savage: string;
@@ -295,3 +300,9 @@ export interface Profile {
   RagfairInfo: RagfairInfo;
   WishList: any[];
 }
+
+export interface ItemSearch {
+  itemId: string;
+  amount: number;
+  stacks: Item[];
+};

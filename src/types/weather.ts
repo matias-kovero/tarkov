@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module Types
+ */
+
 export interface Forcast {
   timestamp: number;
   cloud: number;

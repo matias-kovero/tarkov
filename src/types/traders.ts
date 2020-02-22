@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module Types
+ */
+
 export interface Repair {
   availability: boolean;
   quality: string;

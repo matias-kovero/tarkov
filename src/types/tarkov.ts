@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module Types
+ */
+
 export type Hwid = string;
 
 export interface Notifier {
@@ -26,7 +31,7 @@ export interface MarketFilter {
   removeBartering?: boolean;
   offerOwnerType?: number;
   onlyFunctional?: boolean;
-  handbookId?: string;
+  handbookId: string; // Required item id
   linkedSearchId?: string;
   neededSearchId?: string;
 }

@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module Types
+ */
+
 export interface SystemData {
   buyerNickname: string;
   soldItem: string;
