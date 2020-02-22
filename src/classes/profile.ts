@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module Tarkov
+ */
+
 import {
   Info,
   Customization,
@@ -16,10 +21,6 @@ import {
   Item,
   ItemSearch,
 } from '../types/profile';
-
-const roubleId = '5449016a4bdc2d6f028b456f';
-const dollarId = '5696686a4bdc2da3298b456a';
-const euroId = '569668774bdc2da2298b4568';
 
 export class Profile {
   _id!: string;
@@ -45,12 +46,24 @@ export class Profile {
   RagfairInfo!: RagfairInfo;
   WishList!: any[];
 
+  roubleId = '5449016a4bdc2d6f028b456f';
+  dollarId = '5696686a4bdc2da3298b456a';
+  euroId = '569668774bdc2da2298b4568';
+
   constructor(profile: ProfileData) {
     Object.assign(this, profile);
   }
 
   get items() {
     return this.Inventory.items;
+  }
+
+  get inventory() {
+    return this.Inventory;
+  }
+
+  get skills() {
+    return this.Skills;
   }
 
   getItem(itemId: string): ItemSearch {
@@ -70,15 +83,15 @@ export class Profile {
   }
 
   getRoubles(): ItemSearch {
-    return this.getItem(roubleId);
+    return this.getItem(this.roubleId);
   }
 
   getDollars(): ItemSearch {
-    return this.getItem(dollarId);
+    return this.getItem(this.dollarId);
   }
 
   getEuros(): ItemSearch {
-    return this.getItem(euroId);
+    return this.getItem(this.euroId);
   }
 
   updateItems(updatedItems: Item[]): void {

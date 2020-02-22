@@ -1,5 +1,10 @@
+/**
+ * @packageDocumentation
+ * @module Tarkov
+ */
+
 import got, { Got } from 'got';
-import pako = require('pako');
+import * as pako from 'pako';
 import { ExtendOptions, NormalOptions } from '../types/api';
 
 export class Api {

@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module Types
+ */
+
 export type Hwid = string;
 
 export interface Notifier {

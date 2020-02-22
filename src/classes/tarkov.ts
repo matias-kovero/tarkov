@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module Tarkov
+ */
+
 import { Api } from "./api";
 import * as crypto from 'crypto';
 
@@ -65,6 +70,16 @@ export class Tarkov {
    * @param {string} email Your Tarkov account email
    * @param {string} password Your Tarkov account password
    * @param {string} [twoFactor] 2FA Code sent to your account email
+   */
+  
+  /**
+   * Create a new tarkov session
+   *
+   * @param email - Tarkov Account Email
+   * @param password - Tarkov Account Password
+   * @param twoFactor - twoFactor activation code sent to your account email
+   *
+   * @beta
    */
   public async login(email: string, password: string, twoFactor?: string) {
     const hash = crypto.createHash('md5').update(password).digest('hex');
