@@ -64,13 +64,37 @@ export class MarketOffer {
    */
   async buyWithRoubles(count: number): Promise<any> {
     const roubles = this.profile.getRoubles();
-    const stack = roubles.stacks.find(m => m.upd.StackObjectsCount >= this.summaryCost);
 
-    if (stack === undefined) {
+    const barterItems: BarterItem[] = [];
+    let stacksTotal = 0;
+    
+    // Loop through our stacks of money
+    roubles.stacks.forEach(stack => {
+      // If our current total of roubles is less than the item cost
+      if (stacksTotal < this.summaryCost) {
+        let stackCount = stack.upd.StackObjectsCount;
+
+        // If this entire stack pushes us over the cost, only take what we need
+        if (stacksTotal + stackCount > this.summaryCost) {
+          stackCount = this.summaryCost - stacksTotal;
+        }
+
+        // Add this stack to our barterItems array
+        barterItems.push({
+          id: stack._id,
+          count: stackCount,
+        });
+  
+        // Update our current stacksTotal
+        stacksTotal += stackCount;
+      }
+    });
+
+    // If our total is less than the cost, we don't have enough!
+    if (stacksTotal < this.summaryCost) {
       throw new Error('Not enough money');
     }
 
-    const barterItems: BarterItem[] = [{ id: stack._id, count: this.summaryCost }];
     return this.buy(count, barterItems);
   }
 
