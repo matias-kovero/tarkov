@@ -1,3 +1,5 @@
+import { MarketOffer } from "../classes/marketOffer";
+
 /**
  * @packageDocumentation
  * @module Types
@@ -32,7 +34,7 @@ export interface Requirement {
   _tpl: string;
 }
 
-export interface Offer {
+export interface OfferData {
   _id: string;
   intId: string;
   user: User;
@@ -54,7 +56,7 @@ export interface Categories {
 }
 
 export interface MarketOffers {
-  offers: Offer[];
+  offers: MarketOffer[];
   offersCount: number;
   selectedCategory: string;
   categories: Categories;

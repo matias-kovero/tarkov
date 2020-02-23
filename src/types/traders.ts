@@ -39,7 +39,7 @@ export interface Loyalty {
   loyaltyLevels: LoyaltyLevels;
 }
 
-export interface Trader {
+export interface TraderData {
   _id: string;
   working: boolean;
   customization_seller: boolean;

@@ -21,7 +21,12 @@ import {
   Item,
   ItemSearch,
 } from '../types/profile';
+import { singleton, container } from 'tsyringe';
+import { ApiResponse } from '../types/api';
+import { SelectedProfile } from '../types/tarkov';
+import { Api } from './api';
 
+@singleton()
 export class Profile {
   _id!: string;
   aid!: number;
@@ -49,8 +54,18 @@ export class Profile {
   roubleId = '5449016a4bdc2d6f028b456f';
   dollarId = '5696686a4bdc2da3298b456a';
   euroId = '569668774bdc2da2298b4568';
+  api: Api;
 
-  constructor(profile: ProfileData) {
+  constructor() {
+    this.api = container.resolve(Api);
+  }
+
+  async selectProfile(profile: ProfileData) {
+    const body = JSON.stringify({ uid: profile._id });
+    const result: ApiResponse<SelectedProfile> = await this.api.prod.post('client/game/profile/select', {
+      body,
+    });
+
     Object.assign(this, profile);
   }
 
@@ -94,7 +109,7 @@ export class Profile {
     return this.getItem(this.euroId);
   }
 
-  updateItems(updatedItems: Item[]): void {
+  updateItems(updatedItems: Item[] = []): void {
     this.Inventory.items = this.Inventory.items.map((item: Item) => {
       // Search if this inventory item has been updated
       const index = updatedItems.findIndex(i => i._id === item._id);
@@ -108,14 +123,14 @@ export class Profile {
     });
   }
 
-  addItems(items: Item[]): void {
+  addItems(items: Item[] = []): void {
     this.Inventory.items = [
       ...this.Inventory.items,
       ...items,
     ];
   }
 
-  removeItems(removedItems: Item[]): void {
+  removeItems(removedItems: Item[] = []): void {
     this.Inventory.items = this.Inventory.items.filter((item: Item) => {
       // Search if this inventory item has been removed
       const index = removedItems.findIndex(i => i._id === item._id);
@@ -123,6 +138,20 @@ export class Profile {
       // Return true if we should keep it, false if we should remove it.
       return index === -1;
     });
+  }
+
+  handleChanges(items: any) {
+    if (items.new) {
+      this.addItems(items.new);
+    }
+
+    if (items.change) {
+      this.updateItems(items.change);
+    }
+
+    if (items.del) {
+      this.removeItems(items.del);
+    }
   }
 
 }

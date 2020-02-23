@@ -1,12 +1,12 @@
 {
-  "name": "tarkov",
+  "name": "tarkov-wrapper",
   "version": "1.0.0",
   "description": "A client library for Escape from Tarkov API",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "docs": "typedoc --out docs src",
+    "build": "rm -rf ./lib && tsc",
+    "docs": "rm -rf ./docs && typedoc --out docs src",
     "dev": "tsnd --respawn testing.ts"
   },
   "files": [
@@ -34,7 +34,9 @@
   "homepage": "https://github.com/matias-kovero/tarkov#readme",
   "dependencies": {
     "got": "^10.5.7",
-    "pako": "^1.0.11"
+    "pako": "^1.0.11",
+    "reflect-metadata": "^0.1.13",
+    "tsyringe": "^4.1.0"
   },
   "devDependencies": {
     "@types/got": "^9.6.9",

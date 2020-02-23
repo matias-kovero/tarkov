@@ -5,18 +5,20 @@
 
 import { Api } from "./api";
 import * as crypto from 'crypto';
-
+import { container } from "tsyringe";
 import { ProfileData } from "../types/profile";
 import { ApiResponse } from "../types/api";
-import { Hwid, SelectedProfile, MarketFilter, BarterItem, ItemForSale, ItemDestination } from "../types/tarkov";
+import { Hwid, SelectedProfile, MarketFilter, BarterItem, ItemDestination } from "../types/tarkov";
 import { Localization } from "../types/i18n";
-import { Trader } from "../types/traders";
+import { TraderData } from "../types/traders";
 import { ItemsList } from "../types/item";
 import { Weather } from "../types/weather";
 import { Messages } from "../types/messages";
 import { MessageAttachements } from "../types/MessageAttachements";
-import { MarketOffers } from "../types/market";
+import { MarketOffers, OfferData } from "../types/market";
 import { Profile } from "./profile";
+import { Trader } from "./trader";
+import { MarketOffer } from "./marketOffer";
 
 /** Tarkov API Wrapper */
 export class Tarkov {
@@ -26,13 +28,15 @@ export class Tarkov {
   profile!: Profile;
   localization!: Localization;
   itemsList!: ItemsList;
+  traders!: Trader[];
 
   constructor(hwid?: Hwid) {
     // Use the provided hwid or generate one
     this.hwid = hwid || this.generateHwid();
 
     // Setup our API
-    this.api = new Api();
+    this.api = container.resolve(Api);
+    this.profile = container.resolve(Profile);
 
     console.log(` > Initialized Tarkov API Wrapper`);
     console.log(` > HWID: ${this.hwid}`);
@@ -136,12 +140,7 @@ export class Tarkov {
    * @param {string} profileId
    */
   public async selectProfile(profile: ProfileData): Promise<Profile> {
-    const body = JSON.stringify({ uid: profile._id });
-    const result: ApiResponse<SelectedProfile> = await this.api.prod.post('client/game/profile/select', {
-      body,
-    });
-    
-    this.profile = new Profile(profile);
+    this.profile.selectProfile(profile);
     return this.profile;
   }
 
@@ -150,8 +149,9 @@ export class Tarkov {
    * @async
    */
   public async getTraders(): Promise<Trader[]> {
-    const result: ApiResponse<Trader[]> = await this.api.trading.post('client/trading/api/getTradersList');
-    return result.body.data;
+    const result: ApiResponse<TraderData[]> = await this.api.trading.post('client/trading/api/getTradersList');
+    this.traders = result.body.data.map(trader => new Trader(trader));
+    return this.traders;
   }
 
   /**
@@ -159,9 +159,9 @@ export class Tarkov {
    * @async
    * @param {string} id The traders ID
    */
-  public async getTrader(id: string): Promise<Trader> {
-    const result: ApiResponse<Trader> = await this.api.trading.post(`client/trading/api/getTrader/${id}`);
-    return result.body.data;
+  public async getTrader(id: string): Promise<TraderData> {
+    const result: ApiResponse<TraderData> = await this.api.trading.post(`client/trading/api/getTrader/${id}`);
+    return new Trader(result.body.data);
   }
 
   /**
@@ -282,53 +282,12 @@ export class Tarkov {
     });
     
     const result: ApiResponse<MarketOffers> = await this.api.ragfair.post('client/ragfair/find', { body });
-    return result.body.data;
-  }
-
-  /**
-   * Buy an item
-   * UNTESTED
-   * @async
-   * @param {string} id - offer id
-   * @param {number} count - amount of items to buy
-   * @param {BarterItem[]} barterItems - array of items to fulfill the offer
-   */
-  public async buyItem(id: string, count: number, barterItems: BarterItem[]): Promise<any> {
-    const body = JSON.stringify({
-      data: [{
-        Action: 'RagFairBuyOffer',
-        offers: [{
-          id,
-          count,
-          items: barterItems,
-        }],
-      }],
-      tm: 2,
-    });
-
-    const result: ApiResponse<any> = await this.api.prod.post('client/game/profile/items/moving', { body });
-    return result.body.data;
-  }
-
-  /**
-   * Sell an item
-   * UNTESTED
-   * @async
-   * @param {string} traderId - trader id
-   * @param {ItemForSale[]} items - Array of items to sell
-   */
-  public async sellItem(traderId: string, items: ItemForSale[]): Promise<any> {
-    const body = JSON.stringify({
-      data: [{
-        Action: "TradingConfirm",
-        type: "sell_to_trader",
-        tid: traderId,
-        items: items.map((i: ItemForSale) => ({ ...i, scheme_id: 0 }))
-      }],
-      tm: 0,
-    });
-    const result: ApiResponse<any> = await this.api.prod.post('client/game/profile/items/moving', { body });
-    return result.body.data;
+    return {
+      ...result.body.data,
+      offers: [
+        ...result.body.data.offers.map((offer: OfferData) => new MarketOffer(offer)),
+      ]
+    };
   }
 
   /**
@@ -341,7 +300,7 @@ export class Tarkov {
    * @param {String} requirement.price - On what price you want to sell.
    * @param {boolean} sellAll - Sell all in one piece. Default false
    */
-  public async offerItem(items: any[], requirements: any, sellAll = false): Promise<any> {
+  public async offerItem(items: string[], requirements: any, sellAll = false): Promise<any> {
     const body = JSON.stringify({
       data: [{
         Action: "RagFairAddOffer",

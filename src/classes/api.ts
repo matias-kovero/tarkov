@@ -6,7 +6,9 @@
 import got, { Got } from 'got';
 import * as pako from 'pako';
 import { ExtendOptions, NormalOptions } from '../types/api';
+import { singleton } from "tsyringe";
 
+@singleton()
 export class Api {
   public prod: Got;
   public launcher: Got;
