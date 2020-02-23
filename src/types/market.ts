@@ -1,9 +1,9 @@
-import { MarketOffer } from "../classes/marketOffer";
-
 /**
  * @packageDocumentation
  * @module Types
  */
+
+import { MarketOffer } from "../classes/marketOffer";
 
 export interface User {
   id: string;

@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module Tarkov
+ */
+
 import { TraderData, Repair, Insurance, Loyalty } from "../types/traders";
 import { ApiResponse } from "../types/api";
 import { Api } from "./api";

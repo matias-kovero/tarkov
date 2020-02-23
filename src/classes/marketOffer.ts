@@ -1,3 +1,8 @@
+/**
+ * @packageDocumentation
+ * @module Tarkov
+ */
+
 import { User, Item, Requirement, OfferData } from "../types/market";
 import { BarterItem } from "../types/tarkov";
 import { ApiResponse } from "../types/api";
