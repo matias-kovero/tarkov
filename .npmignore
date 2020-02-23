@@ -7,3 +7,5 @@ lib-old
 testing.ts
 jsdoc.json
 tsconfig.json
+examples
+items.json

@@ -1,11 +1,12 @@
 # Tarkov &middot; [![NPM](https://img.shields.io/npm/l/tarkov?color=blue&style=plastic)](https://github.com/matias-kovero/tarkov/blob/master/LICENSE) [![npm](https://img.shields.io/npm/v/tarkov?color=blue&style=plastic)](https://www.npmjs.com/package/tarkov) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=plastic)](https://github.com/matias-kovero/tarkov/pulls) [![https://github.com/matias-kovero/tarkov/](https://img.shields.io/badge/Tarkov-blue?style=plastic&logo=github&labelColor=24292e&color=4b5936)](https://github.com/matias-kovero/tarkov/) [![Discord](https://img.shields.io/badge/Discord-blue?style=plastic&logo=discord&labelColor=525252&color=525252)](https://discordapp.com/invite/aQPAUCJ)
 
-A js library for the [Escape from Tarkov](https://escapefromtarkov.com) API.  
-This library is currently in alpha. Everything may change significantly in future releases.  
+This library is a wrapper for the [Escape from Tarkov](https://escapefromtarkov.com) API.  
+  
 
 Note: This requires node v8.9.0+
 
-View [Documentation](https://matias-kovero.github.io/tarkov/)
+View [Documentation](https://matias-kovero.github.io/tarkov/)  
+View [Examples](https://github.com/matias-kovero/tarkov/tree/master/examples)
 ## Features
 - [x] Authentication
 - [x] Flea market
@@ -23,34 +24,30 @@ npm i tarkov
 ```
 ## Usage
 ```javascript
-const { Tarkov, generate_hwid } = require('tarkov');
-const tarkov = new Tarkov();
+const { Tarkov } = require('tarkov');
 
-// Check if launcherVersion is up-to-date
-let lv = await tarkov.checkLauncherVersion();
-console.log('>', lv);
+// We can either provide a pre-generated hwid, or not pass it to Tarkov() for a randomly generated one
+const hwid = 'awesome-sick-hwid';
+const t = new Tarkov(hwid);
 
-// Check if gameVersion is up-to-date
-let gv = await tarkov.checkGameVersion();
-console.log('>', gv);
+// Run everything in an async function
+(async () => {
 
-// Login with username, pw, hwid
-let t = await tarkov.login("username", "pw", "hwid");
+  // Login to tarkov, optionally also pass 2 factor code as a third param
+  t.login('email@email.com', 'password');
 
-// Get profiles and select your pmc 
-let profiles = await t.get_profiles();
-let profile = profiles.find(p => p.info.side !== 'Savage');
-await t.select_profile(profile.id);
-console.log(`> Hello, ${profile.info.nickname}!`);
+  // Load all profiles we have
+  const profiles = await t.getProfiles();
 
-// Get localization strings.
-await t.get_i18n("en");
- 
-// Get all items
-let items = await t.get_items();
+  // We're just going to grab the second profile
+  const profile = await t.selectProfile(profiles[1]);
+
+  // Load our i18n translations
+  await t.getI18n('en');
+})();
 ```
-**Contains many other functions that will be documented later on.**
-  
+View more [examples](https://github.com/matias-kovero/tarkov/tree/master/examples)
+
 ### Hardware ID
 Hardware ID (HWID) may be required on authentication, it can either be sniffed from the EFT launcher or generated. It's recommended to save the HWID and reuse it after the first successful authentication.  
   
@@ -59,10 +56,7 @@ Using a fresh HWID means both captcha and 2FA code will be required on your firs
 This library does not attempt to solve captchas for you, the `g-recaptcha-response` token from reCAPTCHA may be required on authentication.
 
 reCAPTCHA can be solved externally using tools like [captcha-harvester](https://github.com/dzt/captcha-harvester).
-```
-URL: https://launcher.escapefromtarkov.com/launcher/login
-Site_key: 6LexEI4UAAAAAIFtNZALcloZfEgHhB8rEUqC1LwV
-```
+
 ## _"Unofficial"_
 I should emphasize that this library is _unofficial_. EFT does not have a public API, everything in this repo was reversed from the game.
 
