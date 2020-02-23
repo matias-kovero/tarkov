@@ -67,9 +67,9 @@
 				<a href="#tarkov-middot-a-hrefhttpsgithubcommatias-koverotarkovblobmasterlicenseimg-srchttpsimgshieldsionpmltarkovcolorbluestyleplastic-altnpma-a-hrefhttpswwwnpmjscompackagetarkovimg-srchttpsimgshieldsionpmvtarkovcolorbluestyleplastic-altnpma-a-hrefhttpsgithubcommatias-koverotarkovpullsimg-srchttpsimgshieldsiobadgeprs-welcome-brightgreenstyleplastic-altprs-welcomea-a-hrefhttpsgithubcommatias-koverotarkovimg-srchttpsimgshieldsiobadgetarkov-bluestyleplasticlogogithublabelcolor24292ecolor4b5936-althttpsgithubcommatias-koverotarkova-a-hrefhttpsdiscordappcominviteaqpaucjimg-srchttpsimgshieldsiobadgediscord-bluestyleplasticlogodiscordlabelcolor525252color525252-altdiscorda" id="tarkov-middot-a-hrefhttpsgithubcommatias-koverotarkovblobmasterlicenseimg-srchttpsimgshieldsionpmltarkovcolorbluestyleplastic-altnpma-a-hrefhttpswwwnpmjscompackagetarkovimg-srchttpsimgshieldsionpmvtarkovcolorbluestyleplastic-altnpma-a-hrefhttpsgithubcommatias-koverotarkovpullsimg-srchttpsimgshieldsiobadgeprs-welcome-brightgreenstyleplastic-altprs-welcomea-a-hrefhttpsgithubcommatias-koverotarkovimg-srchttpsimgshieldsiobadgetarkov-bluestyleplasticlogogithublabelcolor24292ecolor4b5936-althttpsgithubcommatias-koverotarkova-a-hrefhttpsdiscordappcominviteaqpaucjimg-srchttpsimgshieldsiobadgediscord-bluestyleplasticlogodiscordlabelcolor525252color525252-altdiscorda" style="color: inherit; text-decoration: none;">
 					<h1>Tarkov &middot; <a href="https://github.com/matias-kovero/tarkov/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/tarkov?color=blue&style=plastic" alt="NPM"></a> <a href="https://www.npmjs.com/package/tarkov"><img src="https://img.shields.io/npm/v/tarkov?color=blue&style=plastic" alt="npm"></a> <a href="https://github.com/matias-kovero/tarkov/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=plastic" alt="PRs Welcome"></a> <a href="https://github.com/matias-kovero/tarkov/"><img src="https://img.shields.io/badge/Tarkov-blue?style=plastic&logo=github&labelColor=24292e&color=4b5936" alt="https://github.com/matias-kovero/tarkov/"></a> <a href="https://discordapp.com/invite/aQPAUCJ"><img src="https://img.shields.io/badge/Discord-blue?style=plastic&logo=discord&labelColor=525252&color=525252" alt="Discord"></a></h1>
 				</a>
-				<p>A js library for the <a href="https://escapefromtarkov.com">Escape from Tarkov</a> API.<br>This library is currently in alpha. Everything may change significantly in future releases.  </p>
+				<p>This library is a wrapper for the <a href="https://escapefromtarkov.com">Escape from Tarkov</a> API.  </p>
 				<p>Note: This requires node v8.9.0+</p>
-				<p>View <a href="https://matias-kovero.github.io/tarkov/">Documentation</a></p>
+				<p>View <a href="https://matias-kovero.github.io/tarkov/">Documentation</a><br>View <a href="https://github.com/matias-kovero/tarkov/tree/master/examples">Examples</a></p>
 				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
 					<h2>Features</h2>
 				</a>
@@ -90,32 +90,28 @@
 				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
 					<h2>Usage</h2>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> { Tarkov, generate_hwid } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'tarkov'</span>);
-<span class="hljs-keyword">const</span> tarkov = <span class="hljs-keyword">new</span> Tarkov();
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> { Tarkov } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'tarkov'</span>);
 
-<span class="hljs-comment">// Check if launcherVersion is up-to-date</span>
-<span class="hljs-keyword">let</span> lv = <span class="hljs-keyword">await</span> tarkov.checkLauncherVersion();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'&gt;'</span>, lv);
+<span class="hljs-comment">// We can either provide a pre-generated hwid, or not pass it to Tarkov() for a randomly generated one</span>
+<span class="hljs-keyword">const</span> hwid = <span class="hljs-string">'awesome-sick-hwid'</span>;
+<span class="hljs-keyword">const</span> t = <span class="hljs-keyword">new</span> Tarkov(hwid);
 
-<span class="hljs-comment">// Check if gameVersion is up-to-date</span>
-<span class="hljs-keyword">let</span> gv = <span class="hljs-keyword">await</span> tarkov.checkGameVersion();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'&gt;'</span>, gv);
+<span class="hljs-comment">// Run everything in an async function</span>
+<span class="hljs-function">(<span class="hljs-params"><span class="hljs-keyword">async</span> (</span>) =&gt;</span> {
 
-<span class="hljs-comment">// Login with username, pw, hwid</span>
-<span class="hljs-keyword">let</span> t = <span class="hljs-keyword">await</span> tarkov.login(<span class="hljs-string">"username"</span>, <span class="hljs-string">"pw"</span>, <span class="hljs-string">"hwid"</span>);
+  <span class="hljs-comment">// Login to tarkov, optionally also pass 2 factor code as a third param</span>
+  t.login(<span class="hljs-string">'email@email.com'</span>, <span class="hljs-string">'password'</span>);
 
-<span class="hljs-comment">// Get profiles and select your pmc </span>
-<span class="hljs-keyword">let</span> profiles = <span class="hljs-keyword">await</span> t.get_profiles();
-<span class="hljs-keyword">let</span> profile = profiles.find(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.info.side !== <span class="hljs-string">'Savage'</span>);
-<span class="hljs-keyword">await</span> t.select_profile(profile.id);
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`&gt; Hello, <span class="hljs-subst">${profile.info.nickname}</span>!`</span>);
+  <span class="hljs-comment">// Load all profiles we have</span>
+  <span class="hljs-keyword">const</span> profiles = <span class="hljs-keyword">await</span> t.getProfiles();
 
-<span class="hljs-comment">// Get localization strings.</span>
-<span class="hljs-keyword">await</span> t.get_i18n(<span class="hljs-string">"en"</span>);
+  <span class="hljs-comment">// We're just going to grab the second profile</span>
+  <span class="hljs-keyword">const</span> profile = <span class="hljs-keyword">await</span> t.selectProfile(profiles[<span class="hljs-number">1</span>]);
 
-<span class="hljs-comment">// Get all items</span>
-<span class="hljs-keyword">let</span> items = <span class="hljs-keyword">await</span> t.get_items();</code></pre>
-				<p><strong>Contains many other functions that will be documented later on.</strong></p>
+  <span class="hljs-comment">// Load our i18n translations</span>
+  <span class="hljs-keyword">await</span> t.getI18n(<span class="hljs-string">'en'</span>);
+})();</code></pre>
+				<p>View more <a href="https://github.com/matias-kovero/tarkov/tree/master/examples">examples</a></p>
 				<a href="#hardware-id" id="hardware-id" style="color: inherit; text-decoration: none;">
 					<h3>Hardware ID</h3>
 				</a>
@@ -126,8 +122,6 @@
 				</a>
 				<p>This library does not attempt to solve captchas for you, the <code>g-recaptcha-response</code> token from reCAPTCHA may be required on authentication.</p>
 				<p>reCAPTCHA can be solved externally using tools like <a href="https://github.com/dzt/captcha-harvester">captcha-harvester</a>.</p>
-				<pre><code><span class="hljs-string">URL:</span> <span class="hljs-string">https:</span><span class="hljs-comment">//launcher.escapefromtarkov.com/launcher/login</span>
-<span class="hljs-string">Site_key:</span> <span class="hljs-number">6</span>LexEI4UAAAAAIFtNZALcloZfEgHhB8rEUqC1LwV</code></pre>
 				<a href="#emquotunofficialquotem" id="emquotunofficialquotem" style="color: inherit; text-decoration: none;">
 					<h2><em>&quot;Unofficial&quot;</em></h2>
 				</a>
@@ -148,6 +142,15 @@
 				<ul>
 					<li class="globals  ">
 						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_classes_marketoffer_.html">&quot;classes/market<wbr>Offer&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_classes_trader_.html">&quot;classes/trader&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_market_.html">&quot;types/market&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/tarkov.html">Tarkov</a>
