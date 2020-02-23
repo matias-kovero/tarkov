@@ -71,12 +71,12 @@ export class MarketOffer {
     // Loop through our stacks of money
     roubles.stacks.forEach(stack => {
       // If our current total of roubles is less than the item cost
-      if (stacksTotal < this.summaryCost) {
+      if (stacksTotal < (this.summaryCost * count)) {
         let stackCount = stack.upd.StackObjectsCount;
 
         // If this entire stack pushes us over the cost, only take what we need
-        if (stacksTotal + stackCount > this.summaryCost) {
-          stackCount = this.summaryCost - stacksTotal;
+        if (stacksTotal + stackCount > (this.summaryCost * count)) {
+          stackCount = (this.summaryCost * count) - stacksTotal;
         }
 
         // Add this stack to our barterItems array
@@ -91,7 +91,7 @@ export class MarketOffer {
     });
 
     // If our total is less than the cost, we don't have enough!
-    if (stacksTotal < this.summaryCost) {
+    if (stacksTotal < (this.summaryCost * count)) {
       throw new Error('Not enough money');
     }
 
