@@ -19,6 +19,7 @@ import { MarketOffers, OfferData } from "../types/market";
 import { Profile } from "./profile";
 import { Trader } from "./trader";
 import { MarketOffer } from "./marketOffer";
+import { Hideout } from "./Hideout";
 
 /** Tarkov API Wrapper */
 export class Tarkov {
@@ -29,6 +30,7 @@ export class Tarkov {
   localization!: Localization;
   itemsList!: ItemsList;
   traders!: Trader[];
+  hideout: Hideout;
 
   constructor(hwid?: Hwid) {
     // Use the provided hwid or generate one
@@ -37,6 +39,7 @@ export class Tarkov {
     // Setup our API
     this.api = container.resolve(Api);
     this.profile = container.resolve(Profile);
+    this.hideout = container.resolve(Hideout);
 
     console.log(` > Initialized Tarkov API Wrapper`);
     console.log(` > HWID: ${this.hwid}`);
