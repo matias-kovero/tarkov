@@ -140,7 +140,7 @@ export class Profile {
     });
   }
 
-  handleChanges(items: any) {
+  handleChanges(items: any = {}) {
     if (items.new) {
       this.addItems(items.new);
     }

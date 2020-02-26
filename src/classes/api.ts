@@ -46,14 +46,22 @@ export class Api {
       ],
       afterResponse: [
         (response: any, retry: any) => {
-          response = {
-            ...response,
-            body: JSON.parse(pako.inflate(response.body, { to: 'string' })),
-          };
-
-          if (response.body.err !== 0) {
-            throw response.body;
-          };
+          try {
+            const body = JSON.parse(pako.inflate(response.body, { to: 'string' }));
+            response = {
+              ...response,
+              body,
+            };
+  
+            if (response.body.err !== 0) {
+              throw response.body;
+            };
+  
+            return response;
+          } catch (e) {
+            console.log(response.body.toString('utf8'));
+            console.log('Error: ', e);
+          }
 
           return response;
         }
