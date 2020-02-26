@@ -34,7 +34,7 @@ const t = new Tarkov(hwid);
 (async () => {
 
   // Login to tarkov, optionally also pass 2 factor code as a third param
-  t.login('email@email.com', 'password');
+  await t.login('email@email.com', 'password');
 
   // Load all profiles we have
   const profiles = await t.getProfiles();
