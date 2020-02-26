@@ -23,10 +23,10 @@ const t = new Tarkov(hwid);
   const traders = await t.getTraders();
 
   // Let's get therapist from our array of traders
-  const therapist = t.find(t => t._id === '54cb57776803fa99248b456e');
+  const therapist = traders.find(t => t._id === '54cb57776803fa99248b456e');
 
   // Get a list of items this trader sells.
-  const items = therapist.getItems();
+  const items = await therapist.getItems();
 
   console.log(items);
 })();
