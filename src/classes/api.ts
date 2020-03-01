@@ -16,7 +16,7 @@ export class Api {
   public ragfair: Got;
 
   public launcherVersion = '0.9.3.1057';
-  public gameVersion = '0.12.3.5985';
+  public gameVersion = '0.12.3.6090';
   public unityVersion = '2018.4.13f1';
 
   private request = 0;
