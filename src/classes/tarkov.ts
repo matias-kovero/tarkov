@@ -291,32 +291,35 @@ export class Tarkov {
   }
 
   /**
-   * Offer an item
-   * UNTESTED
+   * Offer a list of items
    * @async
    * @param {array} items Array of item ids
-   * @param {object} requirements id of item to move onto
+   * @param {object} requirements
    * @param {String} requirement._tpl - Items schema id. Also known _tpl. Ex. Rouble_id
    * @param {String} requirement.price - On what price you want to sell.
    * @param {boolean} sellAll - Sell all in one piece. Default false
    */
-  public async offerItem(items: string[], requirements: any, sellAll = false): Promise<any> {
+  public async offerItem(items: string[], requirements: { _tpl: string, price: number }, sellAll: boolean = false): Promise<any> {
     const body = JSON.stringify({
       data: [{
         Action: "RagFairAddOffer",
         sellInOnePiece: sellAll,
         items: items, // Array of item_ids
-        requirements:[{
+        requirements: [{
           _tpl: requirements._tpl,
           count: requirements.price,
           level: 0,
           side: 0,
           onlyFunctional: false,
         }],
-      tm: 2,
+        tm: 2,
       }],
     });
     const result: ApiResponse<any> = await this.api.prod.post('client/game/profile/items/moving', { body });
+
+    // Update our local inventory state
+    this.profile.handleChanges(result.body.data.items);
+
     return result.body.data;
   }
 
