@@ -6,7 +6,7 @@
   "typings": "lib/index.d.ts",
   "scripts": {
     "build": "rm -rf ./lib && tsc || del -rf \"./lib\" && tsc",
-    "docs": "rm -rf ./docs && typedoc --out docs src",
+    "docs": "rm -rf ./docs && typedoc --out docs src || del -rf \"./docs\" && typedoc --out docs src",
     "dev": "tsnd --respawn testing.ts"
   },
   "files": [

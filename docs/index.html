@@ -100,7 +100,7 @@
 <span class="hljs-function">(<span class="hljs-params"><span class="hljs-keyword">async</span> (</span>) =&gt;</span> {
 
   <span class="hljs-comment">// Login to tarkov, optionally also pass 2 factor code as a third param</span>
-  t.login(<span class="hljs-string">'email@email.com'</span>, <span class="hljs-string">'password'</span>);
+  <span class="hljs-keyword">await</span> t.login(<span class="hljs-string">'email@email.com'</span>, <span class="hljs-string">'password'</span>);
 
   <span class="hljs-comment">// Load all profiles we have</span>
   <span class="hljs-keyword">const</span> profiles = <span class="hljs-keyword">await</span> t.getProfiles();
