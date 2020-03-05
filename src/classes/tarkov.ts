@@ -75,7 +75,7 @@ export class Tarkov {
    * @param {string} password Your Tarkov account password
    * @param {string} [twoFactor] 2FA Code sent to your account email
    */
-  
+
   /**
    * Create a new tarkov session
    *
@@ -100,7 +100,7 @@ export class Tarkov {
       email,
       pass: hash,
       hwCode: this.hwid,
-      captcha: null, 
+      captcha: null,
     });
 
     try {
@@ -140,7 +140,7 @@ export class Tarkov {
    * @param {string} profileId
    */
   public async selectProfile(profile: ProfileData): Promise<Profile> {
-    this.profile.selectProfile(profile);
+    await this.profile.selectProfile(profile);
     return this.profile;
   }
 
@@ -280,7 +280,7 @@ export class Tarkov {
       tm: 1,
       ...filter,
     });
-    
+
     const result: ApiResponse<MarketOffers> = await this.api.ragfair.post('client/ragfair/find', { body });
     return {
       ...result.body.data,
@@ -359,7 +359,7 @@ export class Tarkov {
         Action: 'Move',
         item: itemId,
         to: {
-          container: 'hideout', // main = container, hideout = stash 
+          container: 'hideout', // main = container, hideout = stash
           location: { x: 0, y: 0, r: 0 }, // try to put to topleft if empty
           ...destination,
         },
@@ -437,7 +437,7 @@ export class Tarkov {
         console.log('New session started!', this.session);
         return true;
       }
-      
+
       throw `Invalid status code ${result.body.err}`;
     } catch (error) {
       throw error;
@@ -480,7 +480,7 @@ export class Tarkov {
       let hash = random_hash();
       return hash.substring(0, hash.length - 8);
     }
-  
+
     return `#1-${random_hash()}:${random_hash()}:${random_hash()}-${random_hash()}-${random_hash()}-${random_hash()}-${random_hash()}-${short_hash()}`;
   }
 }

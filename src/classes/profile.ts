@@ -67,6 +67,7 @@ export class Profile {
     });
 
     Object.assign(this, profile);
+    return result
   }
 
   get items() {
